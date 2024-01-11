@@ -13,6 +13,6 @@ const routes = {
   getProfile: '/me',
   updateProfile: '/user',
   uploadAvatar: '/user/upload-avatar'
-}
+} as const
 
 export default routes
