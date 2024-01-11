@@ -21,7 +21,7 @@ export const priceSchemaRefined = priceSchema.superRefine(({ price_min, price_ma
       message: 'Vui lòng nhập khoảng giá phù hợp',
       path: ['price_min']
     })
-  } else if (price_min === '' || price_max === '') {
+  } else if (price_min === '' && price_max === '') {
     ctx.addIssue({
       code: z.ZodIssueCode.custom,
       message: 'Vui lòng nhập khoảng giá phù hợp',
