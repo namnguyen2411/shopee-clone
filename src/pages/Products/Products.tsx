@@ -1,27 +1,67 @@
+import { useQuery } from '@tanstack/react-query'
+
+import omitBy from 'lodash/omitBy'
+// import isUndefined from 'lodash/isUndefined'
 import AsideFilter from './components/AsideFilter'
-import Pagination from './components/Pagination'
-import Product from './components/Product'
 import SortButtons from './components/SortButtons'
+import Product from './components/Product'
+import Pagination from './components/Pagination'
+import categoryApi from 'src/apis/category.api'
+import productApi from 'src/apis/product.api'
+import { QueryProductsOptionsType } from 'src/types/queryProductsOptions.type'
+import useQueryParam from 'src/hooks/useSearchParam'
 
 export default function Products() {
+  const queryParams = useQueryParam()
+
+  const queryProductsOptions: QueryProductsOptionsType = omitBy(
+    {
+      page: queryParams.page || 1,
+      limit: queryParams.limit,
+      order: queryParams.order,
+      sort_by: queryParams.sort_by,
+      category: queryParams.category,
+      exclude: queryParams.exclude,
+      rating_filter: queryParams.rating_filter,
+      price_max: queryParams.price_max,
+      price_min: queryParams.price_min,
+      name: queryParams.name
+    },
+    (value) => value === undefined
+  )
+
+  const { data: categoriesRespone } = useQuery({
+    queryKey: ['categories'],
+    queryFn: () => categoryApi.getCategories()
+  })
+  const categories = categoriesRespone?.data?.data
+
+  const { data: productsRespone } = useQuery({
+    queryKey: ['products', queryProductsOptions],
+    queryFn: () => productApi.getProducts(queryProductsOptions),
+    staleTime: 1000 * 10
+  })
+  const products = productsRespone?.data.data.products
+  const pageSize = productsRespone?.data.data.pagination.page_size
+
   return (
     <section>
       <div className='grid grid-cols-12'>
         <aside className='col-span-2 mr-5'>
-          <AsideFilter />
+          {categories && <AsideFilter categories={categories} queryProductsOptions={queryProductsOptions} />}
         </aside>
 
-        <div className='col-span-10'>
-          <SortButtons />
-          <div className='mt-2 grid grid-cols-2 gap-2.5 px-1 shadow-sm md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5'>
-            {Array(30)
-              .fill(0)
-              .map((_, index) => (
-                <Product key={index} />
+        {products && (
+          <div className='col-span-10'>
+            <SortButtons queryProductsOptions={queryProductsOptions} pageSize={pageSize as number} />
+            <div className='mt-2 grid grid-cols-2 gap-2.5 px-1 shadow-sm md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-5'>
+              {products.map((product) => (
+                <Product key={product._id} product={product} />
               ))}
+            </div>
+            <Pagination queryProductsOptions={queryProductsOptions} pageSize={pageSize as number} />
           </div>
-          <Pagination />
-        </div>
+        )}
       </div>
     </section>
   )
