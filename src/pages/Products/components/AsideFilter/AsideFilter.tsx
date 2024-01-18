@@ -181,9 +181,11 @@ export default function AsideFilter({ categories, queryProductsOptions }: AsideF
                       return (
                         <StarSVG
                           key={starIndex}
-                          fillColor={MAX_NUMBER_OF_STAR - index > starIndex ? '#ffce3d' : '#f5f5f5'}
                           stroke='#ffce3d'
-                          className='h-3.5 w-3.5'
+                          className={clsx('aspect-square h-3.5', {
+                            'text-yellowStar': MAX_NUMBER_OF_STAR - index > starIndex,
+                            'text-[#f5f5f5]': MAX_NUMBER_OF_STAR - index <= starIndex
+                          })}
                         />
                       )
                     })}

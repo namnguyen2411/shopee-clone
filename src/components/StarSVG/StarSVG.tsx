@@ -1,20 +1,15 @@
 type StartarSVGProps = {
   className?: string
-  fillColor?: string
   stroke?: string
 }
 
 /**
  * Renders a star SVG element.
- * @param {StartarSVGProps} [color='#ee4d2d'] - The fill color of the star. Default value is '#ee4d2d'.
- * @param {string} [className='h-4 w-4'] - The CSS class name for the SVG element. Default value is 'h-4 w-4'.
+ * @param {string} stroke - The color of the stroke. Defaults to 'currentColor'.
+ * @param {string} className - The CSS class name for the SVG element. Default value is 'h-4 w-4'.
  * @returns {JSX.Element} The rendered SVG element.
  */
-export default function StarSVG({
-  fillColor = '#ee4d2d',
-  stroke = fillColor,
-  className = 'h-4 w-4'
-}: StartarSVGProps): JSX.Element {
+export default function StarSVG({ stroke = 'currentColor', className = 'h-4 w-4' }: StartarSVGProps): JSX.Element {
   return (
     <svg enableBackground='new 0 0 15 15' viewBox='0 0 15 15' x={0} y={0} className={className}>
       <polygon
@@ -22,7 +17,7 @@ export default function StarSVG({
         strokeLinecap='round'
         strokeLinejoin='round'
         strokeMiterlimit={10}
-        fill={fillColor}
+        fill='currentColor'
         fillRule='evenodd'
         stroke={stroke}
       />
