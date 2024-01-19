@@ -1,3 +1,12 @@
 @tailwind base;
 @tailwind components;
-@tailwind utilities
+@tailwind utilities;
+
+@layer base {
+  html {
+    @apply overflow-x-hidden scroll-smooth;
+  }
+  body {
+    @apply overflow-x-hidden font-Heveltica-Neue tracking-[0.015em];
+  }
+}
