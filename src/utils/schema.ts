@@ -5,12 +5,12 @@ const schema = z.object({
     .string()
     .email({ message: 'Email không hợp lệ' })
     .min(6, { message: 'Email phải có độ dài tối thiểu 6 kí tự' }),
-  password: z.string().min(6, { message: 'Password phải có độ dài tối thiểu 6 kí tự' }),
-  confirmPassword: z.string().min(6, { message: 'Password phải có độ dài tối thiểu 6 kí tự' }),
+  password: z.string().trim().min(6, { message: 'Password phải có độ dài tối thiểu 6 kí tự' }),
+  confirmPassword: z.string().trim(),
   price_min: z.string(),
   price_max: z.string()
 })
-
+export type Schema = z.infer<typeof schema>
 export default schema
 
 const priceSchema = schema.pick({ price_min: true, price_max: true })
@@ -29,5 +29,17 @@ export const priceSchemaRefined = priceSchema.superRefine(({ price_min, price_ma
     })
   }
 })
-
 export type PriceSchema = z.infer<typeof priceSchemaRefined>
+
+const RegisterSchema = schema.pick({ email: true, password: true, confirmPassword: true })
+export const RegisterSchemaRefined = RegisterSchema.refine(
+  ({ password, confirmPassword }) => password === confirmPassword,
+  {
+    message: 'Mật khẩu không trùng khớp',
+    path: ['confirmPassword']
+  }
+)
+export type RegisterSchema = z.infer<typeof RegisterSchemaRefined>
+
+export const LoginSchema = schema.pick({ email: true, password: true })
+export type LoginSchemaType = z.infer<typeof LoginSchema>
