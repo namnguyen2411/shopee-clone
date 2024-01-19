@@ -54,29 +54,33 @@ export default function Register() {
       <div className='container flex items-center justify-center px-2 py-20 lg:justify-around lg:py-0'>
         <div className='bg-brand-register bg-no-repeat lg:h-[600px] lg:w-full' />
         <form
-          className='w-full max-w-lg space-y-4 rounded bg-white p-9 text-sm shadow-sm'
+          className='w-full max-w-lg rounded bg-white p-8 text-sm shadow-sm'
           noValidate
           onSubmit={(e) => void handleSubmit(onSubmit)(e)}
         >
-          <div className='text-xl'>{isLogin ? 'Đăng nhập' : 'Đăng ký'}</div>
-          <Input<LoginSchemaType>
-            register={register}
-            name='email'
-            type='email'
-            className='mt-1 w-full border border-gray-300 p-3 outline-none focus:border-gray-500 focus:shadow-sm'
-            placeholder='Email'
-            errorMessage={errors.email?.message}
-          />
-          <Input<LoginSchemaType>
-            register={register}
-            name='password'
-            type='password'
-            className='mt-1 w-full border border-gray-300 p-3 outline-none focus:border-gray-500 focus:shadow-sm'
-            placeholder='Mật khẩu'
-            autoComplete='on'
-            errorMessage={errors.password?.message}
-          />
-          <div className='mt-1'>
+          <div className='mb-8 text-xl'>{isLogin ? 'Đăng nhập' : 'Đăng ký'}</div>
+          <div className='mb-4'>
+            <Input<LoginSchemaType>
+              register={register}
+              name='email'
+              type='email'
+              className='w-full border border-gray-300 p-3 outline-none focus:border-gray-500 focus:shadow-sm'
+              placeholder='Email'
+            />
+            <span className='text-sx mt-0.5 block min-h-5 text-red-500'>{errors.email?.message}</span>
+          </div>
+          <div className='mb-4'>
+            <Input<LoginSchemaType>
+              register={register}
+              name='password'
+              type='password'
+              className='w-full border border-gray-300 p-3 outline-none focus:border-gray-500 focus:shadow-sm'
+              placeholder='Mật khẩu'
+              autoComplete='on'
+            />
+            <span className='text-sx mt-0.5 block min-h-5 text-red-500'>{errors.password?.message}</span>
+          </div>
+          <div>
             <Button
               type='submit'
               className='flex w-full items-center justify-center bg-red-500 px-2 py-4 text-sm uppercase text-white hover:bg-red-600 disabled:opacity-80'
