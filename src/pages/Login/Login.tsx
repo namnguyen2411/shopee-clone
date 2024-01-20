@@ -1,6 +1,7 @@
 import { Link, useLocation } from 'react-router-dom'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useContext } from 'react'
 
 import routes from 'src/constants/routes'
 import { LoginSchema, type LoginSchemaType } from 'src/utils/schema'
@@ -9,10 +10,13 @@ import { useMutation } from '@tanstack/react-query'
 import authApi from 'src/apis/auth.api'
 import isGenericsAxiosError from 'src/utils/isGenericsAxiosError'
 import { ErrorResponse } from 'src/types/response.type'
+import { AppContext } from 'src/context/appContext'
+import Button from 'src/components/Button'
 
 export default function Register() {
   const location = useLocation()
   const isLogin = location.pathname.endsWith(routes.login)
+  const { setIsAuthenticated, setProfile } = useContext(AppContext)
 
   const loginMutation = useMutation({
     mutationFn: authApi.logIn
@@ -29,7 +33,9 @@ export default function Register() {
   })
   const onSubmit: SubmitHandler<LoginSchemaType> = (data: LoginSchemaType) => {
     loginMutation.mutate(data, {
-      onSuccess: () => {
+      onSuccess: (data) => {
+        setIsAuthenticated(true)
+        setProfile(data.data.data.user)
         reset()
       },
       onError: (error) => {
@@ -71,12 +77,16 @@ export default function Register() {
             errorMessage={errors.password?.message}
           />
           <div className='mt-1'>
-            <button
+            <Button
               type='submit'
-              className='flex w-full items-center justify-center bg-red-500 px-2 py-4 text-sm uppercase text-white hover:bg-red-600'
+              className='flex w-full items-center justify-center bg-red-500 px-2 py-4 text-sm uppercase text-white hover:bg-red-600 disabled:opacity-80'
+              disabled={loginMutation.isPending}
             >
+              {loginMutation.isPending && (
+                <span className='mr-1.5 aspect-square w-4 animate-spin rounded-full border-l-2 border-t-2 border-gray-400' />
+              )}
               Đăng nhập
-            </button>
+            </Button>
           </div>
           <div className='mt-8 flex items-center justify-center'>
             <span className='text-gray-400'>Bạn chưa có tài khoản?</span>
