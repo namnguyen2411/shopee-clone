@@ -94,8 +94,12 @@ export default function Register() {
           <div>
             <Button
               type='submit'
-              className='flex w-full items-center justify-center bg-red-500 px-2 py-4 text-sm uppercase text-white hover:bg-red-600'
+              className='flex w-full items-center justify-center bg-red-500 px-2 py-4 text-sm uppercase text-white hover:bg-red-600 disabled:opacity-80'
+              disabled={registerMutation.isPending}
             >
+              {registerMutation.isPending && (
+                <span className='mr-1.5 aspect-square w-4 animate-spin rounded-full border-l-2 border-t-2 border-gray-400' />
+              )}
               Đăng ký
             </Button>
           </div>
