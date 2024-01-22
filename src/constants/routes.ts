@@ -7,14 +7,9 @@ const routes = {
   products: '/products',
   product: '/products/:id',
   // private routes
+  cart: '/cart',
   profile: '/user/profile',
-  purchases: '/user/purchases',
-  categories: '/categories',
-  addToCart: '/purchases/add-to-cart',
-  updatePurchase: '/purchases/update-purchase',
-  buyPurchase: '/purchases/buy-products',
-  updateProfile: '/user',
-  uploadAvatar: '/user/upload-avatar'
+  purchases: '/user/purchases'
 } as const
 
 export default routes
