@@ -7,6 +7,7 @@ import ChevronRightSVG from 'src/components/ChevronRightSVG'
 import { QueryProductsOptionsType } from 'src/types/queryProductsOptions.type'
 import { sortBy, orderBy } from 'src/constants/queryProductsOptions'
 import routes from 'src/constants/routes'
+import Button from 'src/components/Button'
 
 type SortButtonsProps = {
   queryProductsOptions: QueryProductsOptionsType
@@ -14,7 +15,7 @@ type SortButtonsProps = {
 }
 
 export default function SortButtons({ queryProductsOptions, pageSize }: SortButtonsProps) {
-  const { sort_by = sortBy.createdAt, order = '' } = queryProductsOptions
+  const { sort_by = sortBy.createdAt, order = '', name } = queryProductsOptions
   const page = Number(queryProductsOptions.page)
   const navigate = useNavigate()
 
@@ -51,9 +52,22 @@ export default function SortButtons({ queryProductsOptions, pageSize }: SortButt
         <div>
           <ul className='flex items-center gap-4'>
             <span>Sắp xếp theo</span>
+            {name && (
+              <li>
+                <Button
+                  className={clsx('rounded px-4 py-1.5 shadow-sm', {
+                    'bg-primary text-white': sort_by === sortBy.relevance,
+                    'bg-white text-black': sort_by !== sortBy.relevance
+                  })}
+                  onClick={() => handleChangeSortValue(sortBy.relevance)}
+                >
+                  Liên Quan
+                </Button>
+              </li>
+            )}
             {/* SORT BY VIEW BUTTON */}
             <li>
-              <button
+              <Button
                 className={clsx('rounded px-4 py-1.5 shadow-sm', {
                   'bg-primary text-white': sort_by === sortBy.view,
                   'bg-white text-black': sort_by !== sortBy.view
@@ -61,13 +75,13 @@ export default function SortButtons({ queryProductsOptions, pageSize }: SortButt
                 onClick={() => handleChangeSortValue(sortBy.view)}
               >
                 Phổ biến
-              </button>
+              </Button>
             </li>
             {/* END SORT BY VIEW BUTTON */}
 
             {/* SORT BY CREATED DAY BUTTON */}
             <li>
-              <button
+              <Button
                 className={clsx('rounded px-4 py-1.5 shadow-sm', {
                   'bg-primary text-white': sort_by === sortBy.createdAt,
                   'bg-white text-black': sort_by !== sortBy.createdAt
@@ -75,13 +89,13 @@ export default function SortButtons({ queryProductsOptions, pageSize }: SortButt
                 onClick={() => handleChangeSortValue(sortBy.createdAt)}
               >
                 Mới Nhất
-              </button>
+              </Button>
             </li>
             {/* END SORT BY CREATED DAY BUTTON */}
 
             {/* SORT BY SOLD BUTTON */}
             <li>
-              <button
+              <Button
                 className={clsx('rounded px-4 py-1.5 shadow-sm', {
                   'bg-primary text-white': sort_by === sortBy.sold,
                   'bg-white text-black': sort_by !== sortBy.sold
@@ -89,7 +103,7 @@ export default function SortButtons({ queryProductsOptions, pageSize }: SortButt
                 onClick={() => handleChangeSortValue(sortBy.sold)}
               >
                 Bán Chạy
-              </button>
+              </Button>
             </li>
             {/* END SORT BY SOLD BUTTON */}
 

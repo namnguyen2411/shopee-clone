@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { useQuery } from '@tanstack/react-query'
-import { useParams } from 'react-router-dom'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useNavigate, useParams } from 'react-router-dom'
 import DOMPurify from 'dompurify'
 
 import QuantityController from 'src/components/QuantityController'
@@ -12,6 +12,10 @@ import ProductRatings from './components/ProductRatings'
 import productApi from 'src/apis/product.api'
 import { QueryProductsOptionsType } from 'src/types/queryProductsOptions.type'
 import { discountPercentage, formatCurrency, formatNumberToSocialStyle, getIdFromNameId } from 'src/utils/helper'
+import purchasesApi from 'src/apis/purchase.api'
+import Button from 'src/components/Button'
+import { toast } from 'react-toastify'
+import routes from 'src/constants/routes'
 
 const NUMBER_OF_SLIDES = 5
 
@@ -24,6 +28,8 @@ export default function ProductDetail() {
   })
   const [activeImage, setActiveImage] = useState('')
   const [quantity, setQuantity] = useState(1)
+  const queryClient = useQueryClient()
+  const navigate = useNavigate()
 
   const productDetailRespone = useQuery({
     queryKey: ['product', id],
@@ -44,6 +50,10 @@ export default function ProductDetail() {
     enabled: Boolean(product)
   })
   const products = productsRespone?.data.data.products
+
+  const addToCartMutation = useMutation({
+    mutationFn: purchasesApi.addToCart
+  })
 
   const handleSlideIndexChange = (action: 'increase' | 'decrease') => {
     setActiveSlideIndex((prev) => {
@@ -82,6 +92,34 @@ export default function ProductDetail() {
     })
   }
 
+  const handleAddToCart = () => {
+    addToCartMutation.mutate(
+      {
+        product_id: product?._id as string,
+        buy_count: quantity
+      },
+      {
+        onSuccess: (data) => {
+          toast.success(data.data.message, { autoClose: 3000 })
+          void queryClient.invalidateQueries({ queryKey: ['purchases'] })
+        },
+        onError: (error) => {
+          console.log(error)
+        }
+      }
+    )
+  }
+
+  const handleBuyNow = () => {
+    addToCartMutation.mutate({
+      product_id: product?._id as string,
+      buy_count: quantity
+    })
+    navigate({
+      pathname: routes.cart
+    })
+  }
+
   if (!product) return null
   return (
     <div className='py-6'>
@@ -97,12 +135,12 @@ export default function ProductDetail() {
                 />
               </div>
               <div className='relative mt-4 grid grid-cols-5 gap-1'>
-                <button
+                <Button
                   className='absolute left-0 top-1/2 z-10 h-10 w-6 -translate-y-1/2 bg-black/30'
                   onClick={() => handleSlideIndexChange('decrease')}
                 >
                   <ChevronLeftSVG className='h-7 w-7 text-white' />
-                </button>
+                </Button>
                 {product.images.slice(activeSlideIndex.first, activeSlideIndex.last).map((image) => {
                   const isActive = activeImage ? activeImage === image : product.images[0] === image
                   return (
@@ -117,12 +155,12 @@ export default function ProductDetail() {
                     </div>
                   )
                 })}
-                <button
+                <Button
                   className='absolute right-0 top-1/2 z-10 h-10 w-6 -translate-y-1/2 bg-black/30 text-white'
                   onClick={() => handleSlideIndexChange('increase')}
                 >
                   <ChevronRightSVG className='h-7 w-7 text-white' />
-                </button>
+                </Button>
               </div>
             </div>
             <div className='col-span-7'>
@@ -156,13 +194,19 @@ export default function ProductDetail() {
                 <div className='ml-6 text-sm text-gray-500'>{product.quantity} sản phẩm có sẵn</div>
               </div>
               <div className='mt-8 flex items-center'>
-                <button className='flex h-12 items-center justify-center gap-2.5 rounded-sm border border-primary bg-primary/10 px-5 capitalize text-primary shadow-sm hover:bg-primary/5'>
+                <Button
+                  onClick={handleAddToCart}
+                  className='flex h-12 items-center justify-center gap-2.5 rounded-sm border border-primary bg-primary/10 px-5 capitalize text-primary shadow-sm hover:bg-primary/5'
+                >
                   <CartSVG />
                   Thêm vào giỏ hàng
-                </button>
-                <button className='ml-4 flex h-12 min-w-[5rem] items-center justify-center rounded-sm bg-primary px-5 capitalize text-white shadow-sm outline-none hover:bg-primary/90'>
+                </Button>
+                <Button
+                  onClick={handleBuyNow}
+                  className='ml-4 flex h-12 min-w-[5rem] items-center justify-center rounded-sm bg-primary px-5 capitalize text-white shadow-sm outline-none hover:bg-primary/90'
+                >
                   Mua ngay
-                </button>
+                </Button>
               </div>
             </div>
           </div>

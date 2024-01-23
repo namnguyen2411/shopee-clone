@@ -12,6 +12,7 @@ import TriangleRightSVG from './components/TriangleRightSVG'
 import MenuSVG from './components/MenuSVG'
 import FilterSVG from './components/FilterSVG'
 import StarSVG from 'src/components/StarSVG'
+import Button from 'src/components/Button'
 
 type AsideFilterProps = {
   categories: CategoryType[]
@@ -20,6 +21,8 @@ type AsideFilterProps = {
 
 const STARS_RATING_OPTIONS = [5, 4, 3, 2, 1]
 const MAX_NUMBER_OF_STAR = STARS_RATING_OPTIONS[0]
+
+const categoryChangedEvent = new Event('category_changed')
 
 export default function AsideFilter({ categories, queryProductsOptions }: AsideFilterProps) {
   const navigate = useNavigate()
@@ -70,6 +73,11 @@ export default function AsideFilter({ categories, queryProductsOptions }: AsideF
     })
   }
 
+  const handleChangeCategory = () => {
+    reset()
+    dispatchEvent(categoryChangedEvent)
+  }
+
   return (
     <aside>
       {/* CATEGORY FILTER */}
@@ -84,7 +92,7 @@ export default function AsideFilter({ categories, queryProductsOptions }: AsideF
           <li className='py-1.5 pl-3'>
             <Link
               to={routes.home}
-              onClick={() => reset()}
+              onClick={handleChangeCategory}
               className={clsx('relative', {
                 'font-semibold text-primary': category === '',
                 'font-medium text-black': category !== ''
@@ -104,7 +112,7 @@ export default function AsideFilter({ categories, queryProductsOptions }: AsideF
                       category: _id
                     }).toString()
                   }}
-                  onClick={() => reset()}
+                  onClick={handleChangeCategory}
                   className={clsx('relative', {
                     'font-semibold text-primary': category === _id,
                     'font-medium text-black': category !== _id
@@ -149,7 +157,7 @@ export default function AsideFilter({ categories, queryProductsOptions }: AsideF
             />
           </div>
           <span className='mt-2 block text-center text-xs text-red-500'>{errors.price_min?.message}</span>
-          <button className='mt-5 w-full rounded-sm bg-primary py-1.5 text-center text-sm text-white'>ÁP DỤNG</button>
+          <Button className='mt-5 w-full rounded-sm bg-primary py-1.5 text-center text-sm text-white'>ÁP DỤNG</Button>
         </form>
       </div>
       {/* END PRICE FILTER */}
@@ -199,12 +207,12 @@ export default function AsideFilter({ categories, queryProductsOptions }: AsideF
       {/* END RATING FILTER */}
 
       {/* CLEAR ALL FILTERS BUTTON */}
-      <button
+      <Button
         className='mt-5 w-full rounded-sm bg-primary py-1.5 text-center text-sm uppercase text-white'
         onClick={handleClearAllFilters}
       >
         XOÁ TẤT CẢ
-      </button>
+      </Button>
     </aside>
   )
 }
