@@ -7,8 +7,9 @@ const schema = z.object({
     .min(6, { message: 'Email phải có độ dài tối thiểu 6 kí tự' }),
   password: z.string().trim().min(6, { message: 'Password phải có độ dài tối thiểu 6 kí tự' }),
   confirmPassword: z.string().trim(),
-  price_min: z.string(),
-  price_max: z.string()
+  price_min: z.string().trim(),
+  price_max: z.string().trim(),
+  productName: z.string().trim().min(1)
 })
 export type Schema = z.infer<typeof schema>
 export default schema
@@ -43,3 +44,6 @@ export type RegisterSchema = z.infer<typeof RegisterSchemaRefined>
 
 export const LoginSchema = schema.pick({ email: true, password: true })
 export type LoginSchemaType = z.infer<typeof LoginSchema>
+
+export const ProductSchema = schema.pick({ productName: true })
+export type ProductSchemaType = z.infer<typeof ProductSchema>
