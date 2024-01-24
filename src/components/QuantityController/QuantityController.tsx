@@ -5,9 +5,16 @@ type QuantityControllerProps = {
   onIncrease: (quantity: number) => void
   onDecrease: (quantity: number) => void
   onChange: (quantity: number) => void
+  onBlur?: (quantity: number) => void
 }
 
-export default function QuantityController({ value, onIncrease, onDecrease, onChange }: QuantityControllerProps) {
+export default function QuantityController({
+  value,
+  onIncrease,
+  onDecrease,
+  onChange,
+  onBlur
+}: QuantityControllerProps) {
   return (
     <div className='flex items-center'>
       <button
@@ -29,6 +36,7 @@ export default function QuantityController({ value, onIncrease, onDecrease, onCh
       <NumberInput
         value={value}
         onChange={(inputValue) => onChange(inputValue as number)}
+        onBlur={() => onBlur && onBlur(value)}
         className='h-8 w-14 border-b border-t border-gray-300 p-1 text-center outline-none focus:border-2 focus:border-black'
       />
 

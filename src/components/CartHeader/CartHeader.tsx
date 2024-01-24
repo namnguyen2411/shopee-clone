@@ -1,30 +1,11 @@
-import { Link, useNavigate } from 'react-router-dom'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-
-import routes from 'src/constants/routes'
-import { ProductSchema, ProductSchemaType } from 'src/utils/schema'
-import { sortBy } from 'src/constants/queryProductsOptions'
+import { Link } from 'react-router-dom'
 import NavHeader from '../NavHeader'
 import LogoSVG from '../LogoSVG'
+import routes from 'src/constants/routes'
+import useSearchProducts from 'src/hooks/useSearchProducts'
 
 export default function CartHeader() {
-  const navigate = useNavigate()
-
-  const { register, handleSubmit } = useForm<ProductSchemaType>({
-    resolver: zodResolver(ProductSchema)
-  })
-
-  const handleSearch = (data: ProductSchemaType) => {
-    const searchParams = new URLSearchParams({
-      name: data.productName,
-      sort_by: sortBy.relevance
-    })
-    navigate({
-      pathname: routes.home,
-      search: searchParams.toString()
-    })
-  }
+  const { register, onSubmit } = useSearchProducts()
 
   return (
     <div className='bg-primary text-white shadow-md'>
@@ -43,7 +24,7 @@ export default function CartHeader() {
               <div className='capitalize text-primary md:text-xl'>Giỏ hàng</div>
             </Link>
             {/* Search */}
-            <form className='mt-3 md:mt-0 md:w-[50%]' onSubmit={(e) => void handleSubmit(handleSearch)(e)}>
+            <form className='mt-3 md:mt-0 md:w-[50%]' onSubmit={(e) => void onSubmit(e)}>
               <div className='flex rounded-sm border-2 border-primary'>
                 <input
                   type='text'

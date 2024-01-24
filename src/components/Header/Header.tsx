@@ -1,8 +1,6 @@
 import { useContext, useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { Link, useNavigate } from 'react-router-dom'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
 
 import { AppContext } from 'src/context/appContext'
 import Popover from '../Popover'
@@ -12,20 +10,18 @@ import { formatCurrency, generateNameId } from 'src/utils/helper'
 import Button from '../Button'
 import noProduct from 'src/assets/images/no-product.png'
 import Input from '../Input'
-import { ProductSchema, ProductSchemaType } from 'src/utils/schema'
-import { sortBy } from 'src/constants/queryProductsOptions'
 import NavHeader from '../NavHeader'
 import LogoSVG from '../LogoSVG'
+import useSearchProducts from 'src/hooks/useSearchProducts'
+import useQueryProductsOptions from 'src/hooks/useQueryProductsOptions'
 
 const NUMBER_OF_DISPLAY_PURCHASES = 5
 
 export default function Header() {
   const { isAuthenticated } = useContext(AppContext)
+  const { name } = useQueryProductsOptions()
   const navigate = useNavigate()
-
-  const { register, handleSubmit, reset } = useForm<ProductSchemaType>({
-    resolver: zodResolver(ProductSchema)
-  })
+  const { register, onSubmit, reset } = useSearchProducts()
 
   const { data: purchasesResponse } = useQuery({
     queryKey: ['purchases'],
@@ -33,17 +29,6 @@ export default function Header() {
     enabled: Boolean(isAuthenticated)
   })
   const purchasesData = purchasesResponse?.data.data
-
-  const handleSearch = (data: ProductSchemaType) => {
-    const searchParams = new URLSearchParams({
-      name: data.productName,
-      sort_by: sortBy.relevance
-    })
-    navigate({
-      pathname: routes.home,
-      search: searchParams.toString()
-    })
-  }
 
   const handleClickPurchase = ({ name, id }: { name: string; id: string }) => {
     navigate(`${routes.products}/${generateNameId({ name, id })}`)
@@ -59,7 +44,7 @@ export default function Header() {
         reset()
       })
     }
-  })
+  }, [reset])
 
   return (
     <div className='bg-[linear-gradient(-180deg,#f53d2d,#f63)] pb-5 pt-1 text-white'>
@@ -72,11 +57,12 @@ export default function Header() {
             <LogoSVG />
           </Link>
           {/* Search */}
-          <form className='col-span-9' onSubmit={(e) => void handleSubmit(handleSearch)(e)}>
+          <form className='col-span-9' onSubmit={(e) => void onSubmit(e)}>
             <div className='flex rounded-sm bg-white p-1'>
               <Input
                 type='text'
                 name='productName'
+                defaultValue={name}
                 register={register}
                 className='flex-grow border-none bg-transparent px-3 py-2 text-black outline-none'
                 placeholder='Vui lòng tìm tên sản phẩm có dấu'
