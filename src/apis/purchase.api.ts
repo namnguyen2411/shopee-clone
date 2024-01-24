@@ -7,6 +7,11 @@ type addToCartBody = {
   buy_count: number
 }
 
+export type ExtendedPurchase = PurchaseType & {
+  isChecked: boolean
+  isDisabled: boolean
+}
+
 const addToCart = (body: addToCartBody) => http.post<SuccessResponse<PurchaseType>>('purchases/add-to-cart', body)
 
 const getPurchases = ({ status }: { status: number }) =>
