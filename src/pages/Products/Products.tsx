@@ -33,6 +33,11 @@ export default function Products() {
 
       {products && (
         <div className='col-span-10'>
+          {queryProductsOptions.name && (
+            <div className='py-5'>
+              ❗ Kết quả tìm kiếm cho từ khoá <span className='text-red-500'>{`"${queryProductsOptions.name}"`}</span>
+            </div>
+          )}
           <SortButtons queryProductsOptions={queryProductsOptions} pageSize={pageSize as number} />
           <div className='mt-2 grid grid-cols-2 gap-2.5 px-1 shadow-sm md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-5'>
             {products.map((product) => (

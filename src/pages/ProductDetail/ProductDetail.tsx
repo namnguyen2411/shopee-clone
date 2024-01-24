@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useNavigate, useParams } from 'react-router-dom'
 import DOMPurify from 'dompurify'
+import { toast } from 'react-toastify'
 
 import QuantityController from 'src/components/QuantityController'
 import CartSVG from './components/CartSVG'
@@ -14,7 +15,6 @@ import { QueryProductsOptionsType } from 'src/types/queryProductsOptions.type'
 import { discountPercentage, formatCurrency, formatNumberToSocialStyle, getIdFromNameId } from 'src/utils/helper'
 import purchasesApi from 'src/apis/purchase.api'
 import Button from 'src/components/Button'
-import { toast } from 'react-toastify'
 import routes from 'src/constants/routes'
 
 const NUMBER_OF_SLIDES = 5
@@ -100,7 +100,10 @@ export default function ProductDetail() {
       },
       {
         onSuccess: (data) => {
-          toast.success(data.data.message, { autoClose: 3000 })
+          toast.success(data.data.message, {
+            position: 'top-center',
+            autoClose: 3000
+          })
           void queryClient.invalidateQueries({ queryKey: ['purchases'] })
         },
         onError: (error) => {
@@ -111,13 +114,22 @@ export default function ProductDetail() {
   }
 
   const handleBuyNow = () => {
-    addToCartMutation.mutate({
-      product_id: product?._id as string,
-      buy_count: quantity
-    })
-    navigate({
-      pathname: routes.cart
-    })
+    addToCartMutation.mutate(
+      {
+        product_id: product?._id as string,
+        buy_count: quantity
+      },
+      {
+        onSuccess: (data) => {
+          const purchaseId = data.data.data._id
+          navigate(routes.cart, {
+            state: {
+              purchaseId
+            }
+          })
+        }
+      }
+    )
   }
 
   if (!product) return null
@@ -127,6 +139,7 @@ export default function ProductDetail() {
         <div className='container'>
           <div className='grid grid-cols-12 gap-9'>
             <div className='col-span-5'>
+              {/* Product Images */}
               <div className='relative w-full pt-[100%] shadow'>
                 <img
                   src={activeImage || product.images[0]}
@@ -134,6 +147,7 @@ export default function ProductDetail() {
                   className='absolute left-0 top-0 h-full w-full bg-white object-cover'
                 />
               </div>
+              {/* Product Images Slider */}
               <div className='relative mt-4 grid grid-cols-5 gap-1'>
                 <Button
                   className='absolute left-0 top-1/2 z-10 h-10 w-6 -translate-y-1/2 bg-black/30'
@@ -163,6 +177,7 @@ export default function ProductDetail() {
                 </Button>
               </div>
             </div>
+            {/* Product Details */}
             <div className='col-span-7'>
               <h1 className='text-xl font-medium uppercase'>{product.name}</h1>
               <div className='mt-8 flex items-center'>
