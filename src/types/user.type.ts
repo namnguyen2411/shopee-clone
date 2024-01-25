@@ -11,3 +11,8 @@ export type User = {
   createdAt: string
   updatedAt: string
 }
+
+export type UserProfile = Pick<User, 'name' | 'address' | 'date_of_birth' | 'phone'> & {
+  password: string
+  newPassword: string
+}

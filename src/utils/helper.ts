@@ -28,3 +28,13 @@ const removeSpecialCharacter = (str: string) =>
 export const generateNameId = ({ name, id }: { name: string; id: string }) => {
   return removeSpecialCharacter(name).replace(/\s/g, '-') + `-i-${id}`
 }
+
+export const hideText = (text: string, start: number = 0, end: number = text.length, replaceWith: string = '*') => {
+  if (end <= start) return ''
+
+  const firstPart = text.substring(0, start)
+  const middlePart = text.substring(start, end).replace(/./g, replaceWith)
+  const lastPart = text.substring(end)
+
+  return `${firstPart}${middlePart}${lastPart}`
+}
