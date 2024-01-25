@@ -1,5 +1,4 @@
 import axios, { AxiosError, HttpStatusCode, type AxiosInstance } from 'axios'
-import { toast } from 'react-toastify'
 import { AuthResponse } from 'src/types/auth.type'
 import { ErrorResponse } from 'src/types/response.type'
 import {
@@ -60,7 +59,10 @@ class Http {
             data?: Record<string, unknown> | undefined
           }>
           const message = data.message || error.message
-          toast.error(message)
+          console.log(message)
+        }
+        if (error.response?.status === HttpStatusCode.Unauthorized) {
+          clearLocalStorage()
         }
         return Promise.reject(error)
       }
