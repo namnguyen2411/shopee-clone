@@ -1,10 +1,11 @@
 import { createBrowserRouter, createRoutesFromElements, Navigate, Route, RouterProvider } from 'react-router-dom'
-import { useContext } from 'react'
+import { useContext, useEffect } from 'react'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
 import { AppContext } from './context/appContext'
 import routes from './constants/routes'
+import { localStorageEventTarget } from './utils/auth'
 // layouts
 import RegisterLayout from './layouts/RegisterLayout'
 import MainLayout from './layouts/MainLayout'
@@ -13,13 +14,15 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import Products from './pages/Products'
 import ProductDetail from './pages/ProductDetail'
-import Profile from './pages/Profile'
-import Purchase from './pages/Purchase'
+import Profile from './pages/User/components/Profile'
+import Purchase from './pages/User/components/Purchase'
 import Cart from './pages/Cart'
 import CartLayout from './layouts/CartLayout'
+import UserLayout from './layouts/UserLayout'
+import Password from './pages/User/components/Password'
 
 export default function App() {
-  const { isAuthenticated } = useContext(AppContext)
+  const { isAuthenticated, reset } = useContext(AppContext)
 
   const router = createBrowserRouter(
     createRoutesFromElements(
@@ -31,8 +34,14 @@ export default function App() {
         <Route element={<MainLayout />}>
           <Route path={routes.home} element={<Products />} />
           <Route path={routes.product} element={<ProductDetail />} />
+        </Route>
+        <Route element={<UserLayout />}>
           <Route path={routes.purchases} element={isAuthenticated ? <Purchase /> : <Navigate to={routes.login} />} />
           <Route path={routes.profile} element={isAuthenticated ? <Profile /> : <Navigate to={routes.login} />} />
+          <Route
+            path={routes.changePassword}
+            element={isAuthenticated ? <Password /> : <Navigate to={routes.login} />}
+          />
         </Route>
         <Route element={<CartLayout />}>
           <Route path={routes.cart} element={isAuthenticated ? <Cart /> : <Navigate to={routes.login} />} />
@@ -40,6 +49,15 @@ export default function App() {
       </Route>
     )
   )
+
+  useEffect(() => {
+    localStorageEventTarget.addEventListener('clearLocalStorage', reset)
+
+    return () => {
+      localStorageEventTarget.removeEventListener('clearLocalStorage', reset)
+    }
+  }, [reset])
+
   return (
     <div className='App'>
       <ToastContainer

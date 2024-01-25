@@ -9,7 +9,8 @@ const routes = {
   // private routes
   cart: '/cart',
   profile: '/user/profile',
-  purchases: '/user/purchases'
+  purchases: '/user/purchases',
+  changePassword: '/user/password'
 } as const
 
 export default routes
