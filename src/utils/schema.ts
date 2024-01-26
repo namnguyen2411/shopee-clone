@@ -9,7 +9,24 @@ const schema = z.object({
   confirmPassword: z.string().trim(),
   price_min: z.string().trim(),
   price_max: z.string().trim(),
-  productName: z.string().trim().min(1)
+  productName: z.string().trim().min(1),
+  name: z
+    .string({
+      required_error: 'Vui lòng nhập tên'
+    })
+    .trim()
+    .min(1, { message: 'Vui lòng nhập tên' })
+    .max(160, { message: 'Tên có độ dài tối đa 160 kí tự' }),
+  phone: z
+    .string({
+      required_error: 'Vui lòng nhập số điện thoại'
+    })
+    .trim()
+    .min(10, { message: 'Vui lòng nhập số điện thoại' })
+    .max(20, { message: 'Số điện thoại tối đa 20 chữ số' }),
+  address: z.string().trim().max(160, { message: 'Tên có độ dài tối đa 160 kí tự' }).default(''),
+  date_of_birth: z.date().max(new Date(), { message: 'Vui lòng chọn ngày phù hợp' }),
+  avatar: z.string().trim().default('')
 })
 export type Schema = z.infer<typeof schema>
 export default schema
@@ -47,3 +64,15 @@ export type LoginSchemaType = z.infer<typeof LoginSchema>
 
 export const ProductSchema = schema.pick({ productName: true })
 export type ProductSchemaType = z.infer<typeof ProductSchema>
+
+export const profileSchema = schema.pick({
+  name: true,
+  phone: true,
+  address: true,
+  date_of_birth: true,
+  avatar: true
+})
+export type ProfileSchemaType = z.infer<typeof profileSchema>
+
+export const passwordSchema = schema.pick({ password: true, confirmPassword: true })
+export type PasswordSchemaType = z.infer<typeof passwordSchema>

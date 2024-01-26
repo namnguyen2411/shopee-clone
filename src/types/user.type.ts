@@ -5,6 +5,7 @@ export type User = {
   roles: Roles[]
   email: string
   name?: string
+  avatar?: string
   date_of_birth?: string
   address?: string
   phone?: string
@@ -12,7 +13,7 @@ export type User = {
   updatedAt: string
 }
 
-export type UserProfile = Pick<User, 'name' | 'address' | 'date_of_birth' | 'phone'> & {
-  password: string
-  newPassword: string
+export type UserProfile = Pick<User, 'name' | 'avatar' | 'address' | 'date_of_birth' | 'phone'> & {
+  password?: string
+  newPassword?: string
 }
