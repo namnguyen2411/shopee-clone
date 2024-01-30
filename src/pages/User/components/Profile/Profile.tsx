@@ -1,29 +1,41 @@
-import { useContext, useEffect } from 'react'
+import { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { Controller, useForm } from 'react-hook-form'
 import clsx from 'clsx'
+import { toast } from 'react-toastify'
 
 import userApi from 'src/apis/user.api'
 import Button from 'src/components/Button'
 import Input from 'src/components/Input'
 import NumberInput from 'src/components/NumberInput'
-import { hideText } from 'src/utils/helper'
+import { getAvatarUrl, hideText } from 'src/utils/helper'
 import { profileSchema, ProfileSchemaType } from 'src/utils/schema'
 import DatePicker from '../DatePicker'
-import { toast } from 'react-toastify'
 import { AppContext } from 'src/context/appContext'
 import { setProfileToLocalStorage } from 'src/utils/auth'
+import isGenericsAxiosError from 'src/utils/isGenericsAxiosError'
+import { ErrorResponse } from 'src/types/response.type'
+
+const START_HIDE_TEXT_INDEX = 2
+const END_HIDE_TEXT_INDEX = 9
+const avatarSizeLimit = 300 * 1024 // 300Kb
 
 export default function Profile() {
+  const [file, setFile] = useState<File>()
   const { setProfile } = useContext(AppContext)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const previewAvatar = useMemo(() => {
+    return file ? URL.createObjectURL(file) : ''
+  }, [file])
 
   const {
     register,
     handleSubmit,
     formState: { errors },
     setValue,
-    control
+    control,
+    setError
   } = useForm<ProfileSchemaType>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
@@ -42,7 +54,28 @@ export default function Profile() {
   const profile = profileResponse?.data.data
 
   const updateProfileMutation = useMutation({
-    mutationFn: userApi.updateProfile
+    mutationFn: userApi.updateProfile,
+    onSuccess: (data) => {
+      void refetch()
+      setProfile(data.data.data)
+      setProfileToLocalStorage(data.data.data)
+      toast.success(data.data.message, {
+        position: 'top-center',
+        autoClose: 3000
+      })
+    },
+    onError: (error) => {
+      if (isGenericsAxiosError<ErrorResponse<ProfileSchemaType>>(error)) {
+        const data = error.response?.data.data as ProfileSchemaType
+        for (const [key, value] of Object.entries(data)) {
+          if (value as string) setError(key as keyof ProfileSchemaType, { message: value as string })
+        }
+      }
+    }
+  })
+
+  const uploadAvatarMutation = useMutation({
+    mutationFn: userApi.uploadAvatar
   })
 
   useEffect(() => {
@@ -54,25 +87,52 @@ export default function Profile() {
     }
   }, [profile, setValue])
 
-  const onSubmit = handleSubmit((data: ProfileSchemaType) => {
-    updateProfileMutation.mutate(
-      {
-        ...data,
-        date_of_birth: data.date_of_birth.toISOString()
-      },
-      {
+  const onSubmit = handleSubmit((body: ProfileSchemaType) => {
+    let avatarName = ''
+    if (file) {
+      const formData = new FormData()
+      formData.append('image', file)
+      uploadAvatarMutation.mutate(formData, {
         onSuccess: (data) => {
-          void refetch()
-          setProfile(data.data.data)
-          setProfileToLocalStorage(data.data.data)
-          toast.success(data.data.message, {
+          avatarName = data.data.data
+          setValue('avatar', avatarName)
+          updateProfileMutation.mutate({
+            ...data,
+            date_of_birth: body.date_of_birth.toISOString(),
+            avatar: avatarName
+          })
+        },
+        onError: () => {
+          toast.error('Không thể cập nhật ảnh đại diện', {
             position: 'top-center',
             autoClose: 3000
           })
         }
-      }
-    )
+      })
+    } else {
+      updateProfileMutation.mutate({
+        ...body,
+        date_of_birth: body.date_of_birth.toISOString(),
+        avatar: avatarName
+      })
+    }
   })
+
+  const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file && (file.size > avatarSizeLimit || !file.type.includes('image'))) {
+      toast.error('Ảnh không đúng định dạng hoặc vượt quá kích thước', {
+        position: 'top-center',
+        autoClose: 3000
+      })
+      return
+    }
+    setFile(file)
+  }
+
+  const handleUpload = () => {
+    fileInputRef.current?.click()
+  }
 
   if (!profile) return null
   return (
@@ -92,7 +152,9 @@ export default function Profile() {
             <div className='truncate pt-3 capitalize sm:w-[20%] sm:text-right'>Email</div>
             {/* Email */}
             <div className='sm:w-[80%] sm:pl-5'>
-              <div className='pt-3 text-gray-700'>{hideText(profile.email, 2, 9)}</div>
+              <div className='pt-3 text-gray-700'>
+                {hideText(profile.email, START_HIDE_TEXT_INDEX, END_HIDE_TEXT_INDEX)}
+              </div>
             </div>
           </div>
           {/* Name */}
@@ -174,20 +236,28 @@ export default function Profile() {
           <div className='flex flex-col items-center'>
             <div className='my-5 h-24 w-24'>
               <img
-                src='https://cf.shopee.vn/file/d04ea22afab6e6d250a370d7ccc2e675_tn'
+                src={previewAvatar || getAvatarUrl(profile.avatar)}
                 alt='avatar'
-                className='w-full rounded-full object-cover'
+                className='h-full w-full rounded-full border border-slate-300 object-cover'
               />
             </div>
-            <input className='hidden' type='file' accept='.jpg,.jpeg,.png' />
+            <input
+              className='hidden'
+              type='file'
+              accept='.jpg,.jpeg,.png'
+              ref={fileInputRef}
+              onChange={onFileChange}
+              onClick={(e) => ((e.target as HTMLInputElement).value = '')}
+            />
             <Button
               className='flex h-10 items-center justify-end rounded-sm border bg-white px-6 text-sm text-gray-600 shadow-sm'
               type='button'
+              onClick={handleUpload}
             >
               Chọn ảnh
             </Button>
-            <div className='mt-4 text-gray-400'>
-              <div>Dụng lượng file tối đa 500 KB</div>
+            <div className='mt-4 text-red-300'>
+              <div>Dụng lượng file tối đa 300 KB</div>
               <div>Định dạng:.JPEG, .PNG</div>
             </div>
           </div>
