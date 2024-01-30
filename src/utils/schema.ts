@@ -5,8 +5,8 @@ const schema = z.object({
     .string()
     .email({ message: 'Email không hợp lệ' })
     .min(6, { message: 'Email phải có độ dài tối thiểu 6 kí tự' }),
-  password: z.string().trim().min(6, { message: 'Password phải có độ dài tối thiểu 6 kí tự' }),
-  confirmPassword: z.string().trim(),
+  password: z.string().trim().min(6, { message: 'Mật khẩu phải có độ dài tối thiểu 6 kí tự' }),
+  confirm_password: z.string().trim(),
   price_min: z.string().trim(),
   price_max: z.string().trim(),
   productName: z.string().trim().min(1),
@@ -26,7 +26,8 @@ const schema = z.object({
     .max(20, { message: 'Số điện thoại tối đa 20 chữ số' }),
   address: z.string().trim().max(160, { message: 'Tên có độ dài tối đa 160 kí tự' }).default(''),
   date_of_birth: z.date().max(new Date(), { message: 'Vui lòng chọn ngày phù hợp' }),
-  avatar: z.string().trim().default('')
+  avatar: z.string().trim().default(''),
+  new_password: z.string().trim().min(6, { message: 'Mật khẩu phải có độ dài tối thiểu 6 kí tự' })
 })
 export type Schema = z.infer<typeof schema>
 export default schema
@@ -49,12 +50,12 @@ export const priceSchemaRefined = priceSchema.superRefine(({ price_min, price_ma
 })
 export type PriceSchema = z.infer<typeof priceSchemaRefined>
 
-const RegisterSchema = schema.pick({ email: true, password: true, confirmPassword: true })
+const RegisterSchema = schema.pick({ email: true, password: true, confirm_password: true })
 export const RegisterSchemaRefined = RegisterSchema.refine(
-  ({ password, confirmPassword }) => password === confirmPassword,
+  ({ password, confirm_password }) => password === confirm_password,
   {
     message: 'Mật khẩu không trùng khớp',
-    path: ['confirmPassword']
+    path: ['confirm_password']
   }
 )
 export type RegisterSchema = z.infer<typeof RegisterSchemaRefined>
@@ -74,5 +75,11 @@ export const profileSchema = schema.pick({
 })
 export type ProfileSchemaType = z.infer<typeof profileSchema>
 
-export const passwordSchema = schema.pick({ password: true, confirmPassword: true })
+export const passwordSchema = schema
+  .pick({ password: true, confirm_password: true, new_password: true })
+  .refine(({ new_password, confirm_password }) => new_password === confirm_password, {
+    message: 'Mật khẩu không trùng khớp',
+    path: ['confirm_password']
+  })
+
 export type PasswordSchemaType = z.infer<typeof passwordSchema>

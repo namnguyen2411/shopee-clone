@@ -83,13 +83,13 @@ export default function Register() {
           <div className='mb-4'>
             <Input<RegisterSchema>
               register={register}
-              name='confirmPassword'
+              name='confirm_password'
               type='password'
               className='w-full border border-gray-300 p-3 outline-none focus:border-gray-500 focus:shadow-sm'
               placeholder='Xác nhận mật khẩu'
               autoComplete='on'
             />
-            <span className='text-sx mt-1 block min-h-5 text-red-500'>{errors.confirmPassword?.message}</span>
+            <span className='text-sx mt-1 block min-h-5 text-red-500'>{errors.confirm_password?.message}</span>
           </div>
           <div>
             <Button

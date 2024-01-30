@@ -1,3 +1,5 @@
+import userImage from 'src/assets/images/user.svg'
+
 export function formatCurrency(currency: number) {
   return new Intl.NumberFormat('de-DE').format(currency)
 }
@@ -38,3 +40,6 @@ export const hideText = (text: string, start: number = 0, end: number = text.len
 
   return `${firstPart}${middlePart}${lastPart}`
 }
+
+export const getAvatarUrl = (avatarName?: string) =>
+  avatarName ? `${import.meta.env.VITE_API_BASE_URL}images/${avatarName}` : userImage

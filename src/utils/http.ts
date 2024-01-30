@@ -58,7 +58,7 @@ class Http {
             message: string
             data?: Record<string, unknown> | undefined
           }>
-          const message = data.message || error.message
+          const message = data?.message || error
           console.log(message)
         }
         if (error.response?.status === HttpStatusCode.Unauthorized) {
