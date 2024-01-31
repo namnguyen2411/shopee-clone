@@ -11,6 +11,7 @@ import routes from 'src/constants/routes'
 import { formatCurrency, generateNameId } from 'src/utils/helper'
 import noProduct from 'src/assets/images/no-product.png'
 import { AppContext } from 'src/context/appContext'
+import purchaseStatus from 'src/constants/purchaseStatus'
 
 const DEBOUNCE_TIME = 600
 
@@ -30,8 +31,8 @@ export default function Cart() {
   }
 
   const { data: purchasesResponse, refetch } = useQuery({
-    queryKey: ['purchases'],
-    queryFn: () => purchaseApi.getPurchases({ status: -1 })
+    queryKey: ['purchases', { status: purchaseStatus.inCart }],
+    queryFn: () => purchaseApi.getPurchases({ status: purchaseStatus.inCart })
   })
   const purchasesData = purchasesResponse?.data.data
 

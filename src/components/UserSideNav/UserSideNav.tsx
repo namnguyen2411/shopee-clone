@@ -76,7 +76,7 @@ export default function UserSideNav() {
         </div>
 
         <NavLink
-          to={routes.purchases}
+          to={routes.purchase}
           className={({ isActive }) =>
             clsx('mt-4 flex items-center capitalize text-gray-600 transition-colors', {
               'text-primary': isActive

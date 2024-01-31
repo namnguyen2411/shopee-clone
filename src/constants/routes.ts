@@ -9,7 +9,7 @@ const routes = {
   // private routes
   cart: '/cart',
   profile: '/user/profile',
-  purchases: '/user/purchases',
+  purchase: '/user/purchase',
   changePassword: '/user/password'
 } as const
 
