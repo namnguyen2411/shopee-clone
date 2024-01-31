@@ -16,6 +16,7 @@ import { discountPercentage, formatCurrency, formatNumberToSocialStyle, getIdFro
 import purchasesApi from 'src/apis/purchase.api'
 import Button from 'src/components/Button'
 import routes from 'src/constants/routes'
+import NotFound from '../NotFound'
 
 const NUMBER_OF_SLIDES = 5
 
@@ -132,97 +133,95 @@ export default function ProductDetail() {
     )
   }
 
-  if (!product) return null
+  if (!product) return <NotFound />
   return (
     <div className='py-6'>
       <div className='bg-white p-4 shadow'>
-        <div className='container'>
-          <div className='grid grid-cols-12 gap-9'>
-            <div className='col-span-5'>
-              {/* Product Images */}
-              <div className='relative w-full pt-[100%] shadow'>
-                <img
-                  src={activeImage || product.images[0]}
-                  alt={product.name}
-                  className='absolute left-0 top-0 h-full w-full bg-white object-cover'
-                />
+        <div className='grid grid-cols-12 gap-9'>
+          {/* Product Images */}
+          <div className='col-span-5'>
+            <div className='relative w-full pt-[100%] shadow'>
+              <img
+                src={activeImage || product.images[0]}
+                alt={product.name}
+                className='absolute left-0 top-0 h-full w-full bg-white object-cover'
+              />
+            </div>
+            {/* Product Images Slider */}
+            <div className='relative mt-4 grid grid-cols-5 gap-1'>
+              <Button
+                className='absolute left-0 top-1/2 z-10 h-10 w-6 -translate-y-1/2 bg-black/30'
+                onClick={() => handleSlideIndexChange('decrease')}
+              >
+                <ChevronLeftSVG className='h-7 w-7 text-white' />
+              </Button>
+              {product.images.slice(activeSlideIndex.first, activeSlideIndex.last).map((image) => {
+                const isActive = activeImage ? activeImage === image : product.images[0] === image
+                return (
+                  <div className='relative w-full cursor-pointer pt-[100%]' key={image}>
+                    <img
+                      src={image}
+                      alt={product.name}
+                      className='absolute left-0 top-0 h-full w-full bg-white object-cover'
+                      onMouseEnter={() => handleHoverActiveImage(image)}
+                    />
+                    {isActive && <div className='absolute inset-0 border-2 border-primary' />}
+                  </div>
+                )
+              })}
+              <Button
+                className='absolute right-0 top-1/2 z-10 h-10 w-6 -translate-y-1/2 bg-black/30 text-white'
+                onClick={() => handleSlideIndexChange('increase')}
+              >
+                <ChevronRightSVG className='h-7 w-7 text-white' />
+              </Button>
+            </div>
+          </div>
+          {/* Product Details */}
+          <div className='col-span-7'>
+            <h1 className='text-xl font-medium uppercase'>{product.name}</h1>
+            <div className='mt-8 flex items-center'>
+              <div className='flex items-center'>
+                <span className='mr-1 border-b border-b-primary text-lg text-primary'>{product.rating}</span>
+                <ProductRatings rating={product.rating} activeClassName='aspect-square w-4 text-primary' />
               </div>
-              {/* Product Images Slider */}
-              <div className='relative mt-4 grid grid-cols-5 gap-1'>
-                <Button
-                  className='absolute left-0 top-1/2 z-10 h-10 w-6 -translate-y-1/2 bg-black/30'
-                  onClick={() => handleSlideIndexChange('decrease')}
-                >
-                  <ChevronLeftSVG className='h-7 w-7 text-white' />
-                </Button>
-                {product.images.slice(activeSlideIndex.first, activeSlideIndex.last).map((image) => {
-                  const isActive = activeImage ? activeImage === image : product.images[0] === image
-                  return (
-                    <div className='relative w-full cursor-pointer pt-[100%]' key={image}>
-                      <img
-                        src={image}
-                        alt={product.name}
-                        className='absolute left-0 top-0 h-full w-full bg-white object-cover'
-                        onMouseEnter={() => handleHoverActiveImage(image)}
-                      />
-                      {isActive && <div className='absolute inset-0 border-2 border-primary' />}
-                    </div>
-                  )
-                })}
-                <Button
-                  className='absolute right-0 top-1/2 z-10 h-10 w-6 -translate-y-1/2 bg-black/30 text-white'
-                  onClick={() => handleSlideIndexChange('increase')}
-                >
-                  <ChevronRightSVG className='h-7 w-7 text-white' />
-                </Button>
+              <div className='mx-4 h-4 w-[1px] bg-gray-300'></div>
+              <div>
+                <span>{formatNumberToSocialStyle(product.sold)}</span>
+                <span className='ml-1 text-gray-500'>Đã bán</span>
               </div>
             </div>
-            {/* Product Details */}
-            <div className='col-span-7'>
-              <h1 className='text-xl font-medium uppercase'>{product.name}</h1>
-              <div className='mt-8 flex items-center'>
-                <div className='flex items-center'>
-                  <span className='mr-1 border-b border-b-primary text-lg text-primary'>{product.rating}</span>
-                  <ProductRatings rating={product.rating} activeClassName='aspect-square w-4 text-primary' />
-                </div>
-                <div className='mx-4 h-4 w-[1px] bg-gray-300'></div>
-                <div>
-                  <span>{formatNumberToSocialStyle(product.sold)}</span>
-                  <span className='ml-1 text-gray-500'>Đã bán</span>
-                </div>
+            <div className='mt-8 flex items-center bg-gray-50 px-5 py-4'>
+              <div className='text-gray-500 line-through'>₫{formatCurrency(product.price_before_discount)}</div>
+              <div className='ml-3 text-3xl font-medium text-primary'>₫{formatCurrency(product.price)}</div>
+              <div className='ml-4 rounded-sm bg-primary px-1 py-[2px] text-xs font-semibold uppercase text-white'>
+                {discountPercentage(product.price_before_discount, product.price)}% giảm
               </div>
-              <div className='mt-8 flex items-center bg-gray-50 px-5 py-4'>
-                <div className='text-gray-500 line-through'>₫{formatCurrency(product.price_before_discount)}</div>
-                <div className='ml-3 text-3xl font-medium text-primary'>₫{formatCurrency(product.price)}</div>
-                <div className='ml-4 rounded-sm bg-primary px-1 py-[2px] text-xs font-semibold uppercase text-white'>
-                  {discountPercentage(product.price_before_discount, product.price)}% giảm
-                </div>
-              </div>
-              <div className='mt-8 flex items-center'>
-                <div className='mr-6 capitalize text-gray-500'>Số lượng</div>
-                <QuantityController
-                  value={quantity}
-                  onIncrease={(value) => handleQuantityChange(value, 1, product.quantity, 'increase')}
-                  onDecrease={(value) => handleQuantityChange(value, 1, product.quantity, 'decrease')}
-                  onChange={(value) => handleQuantityChange(value, 1, product.quantity, 'change')}
-                />
-                <div className='ml-6 text-sm text-gray-500'>{product.quantity} sản phẩm có sẵn</div>
-              </div>
-              <div className='mt-8 flex items-center'>
-                <Button
-                  onClick={handleAddToCart}
-                  className='flex h-12 items-center justify-center gap-2.5 rounded-sm border border-primary bg-primary/10 px-5 capitalize text-primary shadow-sm hover:bg-primary/5'
-                >
-                  <CartSVG />
-                  Thêm vào giỏ hàng
-                </Button>
-                <Button
-                  onClick={handleBuyNow}
-                  className='ml-4 flex h-12 min-w-[5rem] items-center justify-center rounded-sm bg-primary px-5 capitalize text-white shadow-sm outline-none hover:bg-primary/90'
-                >
-                  Mua ngay
-                </Button>
-              </div>
+            </div>
+            <div className='mt-8 flex items-center'>
+              <div className='mr-6 capitalize text-gray-500'>Số lượng</div>
+              <QuantityController
+                value={quantity}
+                onIncrease={(value) => handleQuantityChange(value, 1, product.quantity, 'increase')}
+                onDecrease={(value) => handleQuantityChange(value, 1, product.quantity, 'decrease')}
+                onChange={(value) => handleQuantityChange(value, 1, product.quantity, 'change')}
+              />
+              <div className='ml-6 text-sm text-gray-500'>{product.quantity} sản phẩm có sẵn</div>
+            </div>
+            <div className='mt-8 flex items-center'>
+              <Button
+                onClick={handleAddToCart}
+                className='flex h-12 items-center justify-center gap-2.5 rounded-sm border border-primary bg-primary/10 px-5 capitalize text-primary shadow-sm hover:bg-primary/5'
+              >
+                <CartSVG />
+                Thêm vào giỏ hàng
+              </Button>
+              <Button
+                onClick={handleBuyNow}
+                className='ml-4 flex h-12 min-w-[5rem] items-center justify-center rounded-sm bg-primary px-5 capitalize text-white shadow-sm outline-none hover:bg-primary/90'
+              >
+                Mua ngay
+              </Button>
             </div>
           </div>
         </div>
@@ -238,7 +237,6 @@ export default function ProductDetail() {
           />
         </div>
       </div>
-
       {/* You may also like feature */}
       <div>
         <div className='mt-10 text-lg font-semibold uppercase text-gray-400'>Có thể bạn cũng thích</div>
