@@ -3,6 +3,7 @@ import { SubmitHandler, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useContext } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Helmet } from 'react-helmet-async'
 
 import routes from 'src/constants/routes'
 import { LoginSchema, type LoginSchemaType } from 'src/utils/schema'
@@ -51,6 +52,10 @@ export default function Register() {
 
   return (
     <div className='bg-primary'>
+      <Helmet>
+        <title>{t('loginPage.login')} | Shoppe Clone</title>
+        <meta name='description' content={t('loginPage.login')} />
+      </Helmet>
       <div className='container flex items-center justify-center px-2 py-20 lg:justify-around lg:py-0'>
         <div className='bg-brand-register bg-no-repeat lg:h-[600px] lg:w-full' />
         <form

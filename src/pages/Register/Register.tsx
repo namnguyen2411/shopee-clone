@@ -1,9 +1,10 @@
-import { Link, useLocation } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
 import { useContext } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Helmet } from 'react-helmet-async'
 
 import routes from 'src/constants/routes'
 import { RegisterSchemaRefined, type RegisterSchema } from 'src/utils/schema'
@@ -16,8 +17,6 @@ import Button from 'src/components/Button'
 
 export default function Register() {
   const { t } = useTranslation('header')
-  const location = useLocation()
-  const isRegister = location.pathname.endsWith(routes.register)
   const { setIsAuthenticated, setProfile } = useContext(AppContext)
 
   const registerMutation = useMutation({
@@ -53,6 +52,10 @@ export default function Register() {
 
   return (
     <div className='bg-primary'>
+      <Helmet>
+        <title>{t('registerPage.register')} | Shoppe Clone</title>
+        <meta name='description' content={t('registerPage.register')} />
+      </Helmet>
       <div className='container flex items-center justify-center px-2 py-20 lg:justify-around lg:py-0'>
         <div className='bg-brand-register bg-no-repeat lg:h-[600px] lg:w-full' />
         <form
@@ -60,7 +63,7 @@ export default function Register() {
           noValidate
           onSubmit={(e) => void handleSubmit(onSubmit)(e)}
         >
-          <div className='mb-8 text-xl'>{isRegister ? t('registerPage.register') : t('loginPage.login')}</div>
+          <div className='mb-8 text-xl'>{t('registerPage.register')}</div>
           <div className='mb-4'>
             <Input<RegisterSchema>
               register={register}

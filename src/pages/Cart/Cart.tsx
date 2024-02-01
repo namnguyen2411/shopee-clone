@@ -4,6 +4,7 @@ import { Link, useLocation } from 'react-router-dom'
 import keyBy from 'lodash/keyBy'
 import { toast } from 'react-toastify'
 import { useTranslation } from 'react-i18next'
+import { Helmet } from 'react-helmet-async'
 
 import purchaseApi, { ExtendedPurchase } from 'src/apis/purchase.api'
 import Button from 'src/components/Button'
@@ -231,6 +232,10 @@ export default function Cart() {
 
   return (
     <div className='bg-neutral-100 py-16'>
+      <Helmet>
+        <title>{t('title')} | Shoppe Clone</title>
+        <meta name='description' content={t('title')} />
+      </Helmet>
       <div className='container'>
         <div className='overflow-auto'>
           <div className='min-w-[1000px]'>

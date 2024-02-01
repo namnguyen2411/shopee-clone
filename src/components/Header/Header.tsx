@@ -18,6 +18,8 @@ import useQueryProductsOptions from 'src/hooks/useQueryProductsOptions'
 
 const NUMBER_OF_DISPLAY_PURCHASES = 5
 
+const clearAllFilters = new Event('clear_all_filters')
+
 export default function Header() {
   const { isAuthenticated } = useContext(AppContext)
   const { name } = useQueryProductsOptions()
@@ -32,21 +34,22 @@ export default function Header() {
   })
   const purchasesData = purchasesResponse?.data.data
 
+  useEffect(() => {
+    window.addEventListener('category_changed', () => reset())
+
+    return () => {
+      window.removeEventListener('category_changed', () => reset())
+    }
+  }, [reset])
+
   const handleClickPurchase = ({ name, id }: { name: string; id: string }) => {
     navigate(`${routes.products}/${generateNameId({ name, id })}`)
   }
 
-  useEffect(() => {
-    window.addEventListener('category_changed', () => {
-      reset()
-    })
-
-    return () => {
-      window.removeEventListener('category_changed', () => {
-        reset()
-      })
-    }
-  }, [reset])
+  const handleClearAllFilters = () => {
+    reset()
+    dispatchEvent(clearAllFilters)
+  }
 
   return (
     <div className='bg-[linear-gradient(-180deg,#f53d2d,#f63)] pb-5 pt-1 text-white'>
@@ -54,11 +57,17 @@ export default function Header() {
         <NavHeader />
         <div className='mt-4 grid grid-cols-12 items-end gap-4'>
           {/* Logo */}
-          <Link to='/' className='col-span-2'>
+          <Link to={routes.home} className='col-span-2' onClick={handleClearAllFilters}>
             <LogoSVG />
           </Link>
           {/* Search */}
-          <form className='col-span-9' onSubmit={(e) => void onSubmit(e)}>
+          <form
+            className='col-span-9'
+            onSubmit={(e) => {
+              void onSubmit(e)
+              dispatchEvent(clearAllFilters)
+            }}
+          >
             <div className='flex rounded-sm bg-white p-1'>
               <Input
                 type='text'

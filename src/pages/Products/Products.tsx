@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
+import { Helmet } from 'react-helmet-async'
 
 import AsideFilter from './components/AsideFilter'
 import SortButtons from './components/SortButtons'
@@ -29,6 +30,10 @@ export default function Products() {
 
   return (
     <section className='grid grid-cols-12'>
+      <Helmet>
+        <title>{t('home')} | Shoppe Clone</title>
+        <meta name='description' content={t('description')} />
+      </Helmet>
       <aside className='col-span-2 mr-5'>
         {categories && <AsideFilter categories={categories} queryProductsOptions={queryProductsOptions} />}
       </aside>

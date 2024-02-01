@@ -14,6 +14,7 @@ import MenuSVG from './components/MenuSVG'
 import FilterSVG from './components/FilterSVG'
 import StarSVG from 'src/components/StarSVG'
 import Button from 'src/components/Button'
+import { useEffect } from 'react'
 
 type AsideFilterProps = {
   categories: CategoryType[]
@@ -40,6 +41,14 @@ export default function AsideFilter({ categories, queryProductsOptions }: AsideF
     resolver: zodResolver(priceSchemaRefined),
     shouldFocusError: false
   })
+
+  useEffect(() => {
+    window.addEventListener('clear_all_filters', () => reset())
+
+    return () => {
+      window.removeEventListener('clear_all_filters', () => reset())
+    }
+  }, [reset])
 
   const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     clearErrors('price_min')

@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form'
 import clsx from 'clsx'
 import omit from 'lodash/omit'
 import { useTranslation } from 'react-i18next'
+import { Helmet } from 'react-helmet-async'
 
 import Button from 'src/components/Button'
 import Input from 'src/components/Input'
@@ -65,6 +66,10 @@ export default function Password() {
 
   return (
     <div className='rounded-sm bg-white px-2 pb-10 shadow md:px-7 md:pb-20'>
+      <Helmet>
+        <title>{t('sideNav.myAccount')}</title>
+        <meta name='description' content={t('sideNav.myAccount')} />
+      </Helmet>
       <div className='border-b border-b-gray-200 py-6'>
         <h1 className='pb-1 text-lg font-medium capitalize text-gray-900'>{t('changePassword.changePassword')}</h1>
       </div>

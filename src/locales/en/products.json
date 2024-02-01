@@ -1,4 +1,6 @@
 {
+  "home": "Homepage",
+  "description": "Homepage of the Shopee Clone project",
   "searchResult": "Search result for",
   "sold": "sold",
   "asideFilter": {

@@ -17,6 +17,7 @@ import { AppContext } from 'src/context/appContext'
 import { setProfileToLocalStorage } from 'src/utils/auth'
 import isGenericsAxiosError from 'src/utils/isGenericsAxiosError'
 import { ErrorResponse } from 'src/types/response.type'
+import { Helmet } from 'react-helmet-async'
 
 const START_HIDE_TEXT_INDEX = 2
 const END_HIDE_TEXT_INDEX = 9
@@ -146,6 +147,10 @@ export default function Profile() {
   if (!profile) return null
   return (
     <div className='rounded-sm bg-white px-2 pb-10 shadow md:px-7 md:pb-20'>
+      <Helmet>
+        <title>{t('sideNav.myAccount')}</title>
+        <meta name='description' content={t('sideNav.myAccount')} />
+      </Helmet>
       <div className='border-b border-b-gray-200 py-6'>
         <h1 className='text-lg font-medium capitalize text-gray-900'>{t('profile.myProfile')}</h1>
         <div className='mt-1 text-sm text-gray-600'>{t('profile.manage&protect')}</div>

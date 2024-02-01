@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { Link, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { Helmet } from 'react-helmet-async'
 
 import purchaseStatus from 'src/constants/purchaseStatus'
 import purchaseApi from 'src/apis/purchase.api'
@@ -43,6 +44,10 @@ export default function Purchase() {
   if (!purchasesData) return null
   return (
     <div>
+      <Helmet>
+        <title>{t('sideNav.myPurchase')}</title>
+        <meta name='description' content={t('sideNav.myPurchase')} />
+      </Helmet>
       <div className='overflow-x-auto'>
         <div className='min-w-[700px]'>
           <div className='border-b border-b-gray-200 py-6'>

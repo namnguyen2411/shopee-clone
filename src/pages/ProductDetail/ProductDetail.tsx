@@ -4,6 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import DOMPurify from 'dompurify'
 import { toast } from 'react-toastify'
 import { useTranslation } from 'react-i18next'
+import { Helmet } from 'react-helmet-async'
 
 import QuantityController from 'src/components/QuantityController'
 import CartSVG from './components/CartSVG'
@@ -138,6 +139,10 @@ export default function ProductDetail() {
   if (!product) return <NotFound />
   return (
     <div className='py-6'>
+      <Helmet>
+        <title>{product.name} | Shoppe Clone</title>
+        <meta name='description' content={t('description')} />
+      </Helmet>
       <div className='bg-white p-4 shadow'>
         <div className='grid grid-cols-12 gap-9'>
           {/* Product Images */}
