@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import routes from 'src/constants/routes'
 import ProductRatings from 'src/pages/ProductDetail/components/ProductRatings'
@@ -10,6 +11,8 @@ type ProductProps = {
 
 export default function Product({ product }: ProductProps) {
   const { _id, image, name, price, sold, rating } = product
+  const { i18n, t } = useTranslation('products')
+  const currentLanguage = i18n.language
 
   return (
     <Link
@@ -33,7 +36,11 @@ export default function Product({ product }: ProductProps) {
             nonActiveClassName='text-[#d5d5d5] w-3.5 aspect-square'
             nonActiveStroke='#d5d5d5'
           />
-          <p className='ml-1.5'>Đã bán {formatNumberToSocialStyle(sold)}</p>
+          <p className='ml-1.5'>
+            {currentLanguage === 'vi'
+              ? `${t('sold')} ${formatNumberToSocialStyle(sold)}`
+              : `${formatNumberToSocialStyle(sold)} ${t('sold')}`}
+          </p>
         </div>
       </div>
     </Link>

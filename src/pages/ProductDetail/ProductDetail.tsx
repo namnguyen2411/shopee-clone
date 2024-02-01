@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useNavigate, useParams } from 'react-router-dom'
 import DOMPurify from 'dompurify'
 import { toast } from 'react-toastify'
+import { useTranslation } from 'react-i18next'
 
 import QuantityController from 'src/components/QuantityController'
 import CartSVG from './components/CartSVG'
@@ -31,6 +32,7 @@ export default function ProductDetail() {
   const [quantity, setQuantity] = useState(1)
   const queryClient = useQueryClient()
   const navigate = useNavigate()
+  const { t } = useTranslation('productDetail')
 
   const productDetailRespone = useQuery({
     queryKey: ['product', id],
@@ -188,39 +190,41 @@ export default function ProductDetail() {
               <div className='mx-4 h-4 w-[1px] bg-gray-300'></div>
               <div>
                 <span>{formatNumberToSocialStyle(product.sold)}</span>
-                <span className='ml-1 text-gray-500'>Đã bán</span>
+                <span className='ml-1 text-gray-500'>{t('sold')}</span>
               </div>
             </div>
             <div className='mt-8 flex items-center bg-gray-50 px-5 py-4'>
               <div className='text-gray-500 line-through'>₫{formatCurrency(product.price_before_discount)}</div>
               <div className='ml-3 text-3xl font-medium text-primary'>₫{formatCurrency(product.price)}</div>
               <div className='ml-4 rounded-sm bg-primary px-1 py-[2px] text-xs font-semibold uppercase text-white'>
-                {discountPercentage(product.price_before_discount, product.price)}% giảm
+                {discountPercentage(product.price_before_discount, product.price)}% {t('off')}
               </div>
             </div>
             <div className='mt-8 flex items-center'>
-              <div className='mr-6 capitalize text-gray-500'>Số lượng</div>
+              <div className='mr-6 capitalize text-gray-500'>{t('quantity')}</div>
               <QuantityController
                 value={quantity}
                 onIncrease={(value) => handleQuantityChange(value, 1, product.quantity, 'increase')}
                 onDecrease={(value) => handleQuantityChange(value, 1, product.quantity, 'decrease')}
                 onChange={(value) => handleQuantityChange(value, 1, product.quantity, 'change')}
               />
-              <div className='ml-6 text-sm text-gray-500'>{product.quantity} sản phẩm có sẵn</div>
+              <div className='ml-6 text-sm text-gray-500'>
+                {product.quantity} {t('inStock')}
+              </div>
             </div>
             <div className='mt-8 flex items-center'>
               <Button
                 onClick={handleAddToCart}
-                className='flex h-12 items-center justify-center gap-2.5 rounded-sm border border-primary bg-primary/10 px-5 capitalize text-primary shadow-sm hover:bg-primary/5'
+                className='flex h-12 min-w-48 items-center justify-center gap-2.5 rounded-sm border border-primary bg-primary/10 px-5 capitalize text-primary shadow-sm hover:bg-primary/5'
               >
                 <CartSVG />
-                Thêm vào giỏ hàng
+                {t('addToCart')}
               </Button>
               <Button
                 onClick={handleBuyNow}
                 className='ml-4 flex h-12 min-w-[5rem] items-center justify-center rounded-sm bg-primary px-5 capitalize text-white shadow-sm outline-none hover:bg-primary/90'
               >
-                Mua ngay
+                {t('buyNow')}
               </Button>
             </div>
           </div>
@@ -228,7 +232,7 @@ export default function ProductDetail() {
       </div>
       {/* Product Description */}
       <div className='mt-8 bg-white p-4 shadow'>
-        <div className='rounded bg-gray-50 p-4 text-xl font-semibold uppercase text-slate-700'>Mô tả sản phẩm</div>
+        <div className='rounded bg-gray-50 p-4 text-xl font-semibold uppercase text-slate-700'>{t('description')}</div>
         <div className='mx-4 mb-4 mt-7 text-sm leading-loose'>
           <div
             dangerouslySetInnerHTML={{
@@ -239,13 +243,13 @@ export default function ProductDetail() {
       </div>
       {/* You may also like feature */}
       <div>
-        <div className='mt-10 text-lg font-semibold uppercase text-gray-400'>Có thể bạn cũng thích</div>
+        <div className='mt-10 text-lg font-semibold uppercase text-gray-400'>{t('alsoLike')}</div>
         {products && (
           <div className='mt-2 grid grid-cols-2 gap-2.5 px-1 shadow-sm md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4'>
             {products.slice(0, 17).map((p) => {
               if (p._id === product?._id) return null
               return (
-                <div className='col-span-1' key={p._id}>
+                <div className='col-span-1 border border-gray-200 bg-white' key={p._id}>
                   <Product product={p} />
                 </div>
               )

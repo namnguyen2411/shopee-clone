@@ -1,0 +1,26 @@
+{
+  "download": "Download",
+  "follow": "Follow us on",
+  "profile": {
+    "myAccount": "My Account",
+    "myPurchase": "My Purchase",
+    "logout": "Logout"
+  },
+  "cart": {
+    "recentlyAdded": "Recently Added Products",
+    "viewCart": "View My Shopping Cart",
+    "noProducts": "No Products Yet"
+  },
+  "searchPlaceholder": "Please find the name of the product with accents",
+  "registerPage": {
+    "register": "Register",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "haveAnAccount": "Have an account?"
+  },
+  "loginPage": {
+    "login": "Login",
+    "new": "New to Shoppe?"
+  },
+  "needHelp": "Need Help?"
+}

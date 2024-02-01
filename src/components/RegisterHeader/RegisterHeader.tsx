@@ -1,7 +1,9 @@
+import { useTranslation } from 'react-i18next'
 import { Link, useLocation } from 'react-router-dom'
 import routes from 'src/constants/routes'
 
 export default function RegisterHeader() {
+  const { t } = useTranslation('header')
   const location = useLocation()
   const isRegister = location.pathname.endsWith(routes.register)
 
@@ -18,11 +20,13 @@ export default function RegisterHeader() {
               </svg>
             </Link>
           </div>
-          <div className='ml-5 text-2xl lg:text-2xl'>{isRegister ? 'Đăng ký' : 'Đăng nhập'}</div>
+          <div className='ml-5 text-2xl lg:text-2xl'>
+            {isRegister ? t('registerPage.register') : t('loginPage.login')}
+          </div>
         </div>
         <div>
           <Link to='https://help.shopee.vn/portal' className='text-sm text-primary'>
-            Bạn cần giúp đỡ?
+            {t('needHelp')}
           </Link>
         </div>
       </div>

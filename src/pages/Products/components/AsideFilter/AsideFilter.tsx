@@ -3,6 +3,7 @@ import clsx from 'clsx'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import omit from 'lodash/omit'
+import { useTranslation } from 'react-i18next'
 
 import routes from 'src/constants/routes'
 import { CategoryType } from 'src/types/category.type'
@@ -25,6 +26,7 @@ const MAX_NUMBER_OF_STAR = STARS_RATING_OPTIONS[0]
 const categoryChangedEvent = new Event('category_changed')
 
 export default function AsideFilter({ categories, queryProductsOptions }: AsideFilterProps) {
+  const { t } = useTranslation('products')
   const navigate = useNavigate()
   const { category = '', rating_filter } = queryProductsOptions
 
@@ -85,7 +87,7 @@ export default function AsideFilter({ categories, queryProductsOptions }: AsideF
         <div className='mb-2.5 flex h-[51px] items-center border-b border-b-gray-200'>
           <div className='flex items-baseline gap-2 text-lg font-semibold'>
             <MenuSVG />
-            Danh Mục
+            {t('asideFilter.category')}
           </div>
         </div>
         <ul>
@@ -98,7 +100,7 @@ export default function AsideFilter({ categories, queryProductsOptions }: AsideF
                 'font-medium text-black': category !== ''
               })}
             >
-              Tất cả
+              {t('asideFilter.categories.all')}
               {category === '' && <TriangleRightSVG className='absolute -left-3 top-1/4 h-2 w-2 fill-primary' />}
             </Link>
           </li>
@@ -130,12 +132,12 @@ export default function AsideFilter({ categories, queryProductsOptions }: AsideF
 
       <div className='mt-8 flex items-baseline gap-2 text-lg font-semibold'>
         <FilterSVG />
-        Bộ Lọc Tìm Kiếm
+        {t('asideFilter.searchFilter')}
       </div>
 
       {/* PRICE FILTER */}
       <div className='border-b border-b-gray-200 pb-5'>
-        <div className='my-5 capitalize'>Khoảng Giá</div>
+        <div className='my-5 capitalize'>{t('asideFilter.searchFilterOptions.priceRange')}</div>
         <form noValidate onSubmit={(e) => void handleSubmit(onSubmit)(e)}>
           <div className='relative flex items-center justify-between gap-8'>
             <input
@@ -144,7 +146,7 @@ export default function AsideFilter({ categories, queryProductsOptions }: AsideF
                 onChange: handlePriceChange
               })}
               className='w-1/2 rounded-sm border border-gray-400 p-1 text-sm shadow-sm'
-              placeholder='₫ TỪ'
+              placeholder={t('asideFilter.searchFilterOptions.min')}
             />
             <span className='absolute left-1/2 top-1/2 h-[1px] w-2.5 -translate-x-1/2 -translate-y-1/2 bg-gray-400' />
             <input
@@ -153,18 +155,20 @@ export default function AsideFilter({ categories, queryProductsOptions }: AsideF
                 onChange: handlePriceChange
               })}
               className='w-1/2 rounded-sm border border-gray-400 p-1 text-sm shadow-sm'
-              placeholder='₫ ĐẾN'
+              placeholder={t('asideFilter.searchFilterOptions.max')}
             />
           </div>
           <span className='mt-2 block text-center text-xs text-red-500'>{errors.price_min?.message}</span>
-          <Button className='mt-5 w-full rounded-sm bg-primary py-1.5 text-center text-sm text-white'>ÁP DỤNG</Button>
+          <Button className='mt-5 w-full rounded-sm bg-primary py-1.5 text-center text-sm text-white'>
+            {t('asideFilter.searchFilterOptions.apply')}
+          </Button>
         </form>
       </div>
       {/* END PRICE FILTER */}
 
       {/* RATING FILTER */}
       <div className='border-b border-b-gray-200 pb-5'>
-        <div className='mb-2.5 mt-5 capitalize'>Đánh Giá</div>
+        <div className='mb-2.5 mt-5 capitalize'>{t('asideFilter.searchFilterOptions.rating')}</div>
         <ul>
           {STARS_RATING_OPTIONS.map((option, index) => {
             const isActive = Number(rating_filter) === option
@@ -197,7 +201,7 @@ export default function AsideFilter({ categories, queryProductsOptions }: AsideF
                         />
                       )
                     })}
-                  {index !== 0 && <span className='ml-1 text-sm'>trở lên</span>}
+                  {index !== 0 && <span className='ml-1 text-sm'>{t('asideFilter.searchFilterOptions.up')}</span>}
                 </Link>
               </li>
             )
@@ -211,7 +215,7 @@ export default function AsideFilter({ categories, queryProductsOptions }: AsideF
         className='mt-5 w-full rounded-sm bg-primary py-1.5 text-center text-sm uppercase text-white'
         onClick={handleClearAllFilters}
       >
-        XOÁ TẤT CẢ
+        {t('asideFilter.searchFilterOptions.clearAll')}
       </Button>
     </aside>
   )

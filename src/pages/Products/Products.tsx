@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 
 import AsideFilter from './components/AsideFilter'
 import SortButtons from './components/SortButtons'
@@ -9,6 +10,7 @@ import productApi from 'src/apis/product.api'
 import useQueryProductsOptions from 'src/hooks/useQueryProductsOptions'
 
 export default function Products() {
+  const { t } = useTranslation('products')
   const queryProductsOptions = useQueryProductsOptions()
 
   const { data: categoriesRespone } = useQuery({
@@ -35,7 +37,7 @@ export default function Products() {
         <div className='col-span-10'>
           {queryProductsOptions.name && (
             <div className='py-5'>
-              ❗ Kết quả tìm kiếm cho từ khoá <span className='text-red-500'>{`"${queryProductsOptions.name}"`}</span>
+              ❗ {t('searchResult')} &#34;<span className='text-red-500'>{`${queryProductsOptions.name}`}</span>&#34;
             </div>
           )}
           <SortButtons queryProductsOptions={queryProductsOptions} pageSize={pageSize as number} />

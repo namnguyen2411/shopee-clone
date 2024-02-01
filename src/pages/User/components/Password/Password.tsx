@@ -3,6 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import clsx from 'clsx'
 import omit from 'lodash/omit'
+import { useTranslation } from 'react-i18next'
 
 import Button from 'src/components/Button'
 import Input from 'src/components/Input'
@@ -16,6 +17,7 @@ import isGenericsAxiosError from 'src/utils/isGenericsAxiosError'
 import { ErrorResponse } from 'src/types/response.type'
 
 export default function Password() {
+  const { t } = useTranslation('user')
   const [showPassword, setShowPassword] = useState({
     new_password: false,
     password: false,
@@ -64,14 +66,16 @@ export default function Password() {
   return (
     <div className='rounded-sm bg-white px-2 pb-10 shadow md:px-7 md:pb-20'>
       <div className='border-b border-b-gray-200 py-6'>
-        <h1 className='pb-1 text-lg font-medium capitalize text-gray-900'>Đổi mật khẩu</h1>
+        <h1 className='pb-1 text-lg font-medium capitalize text-gray-900'>{t('changePassword.changePassword')}</h1>
       </div>
       {/* User Profile */}
       <form className='mr-auto mt-8 max-w-3xl' onSubmit={(e) => void onSubmit(e)} noValidate>
         <div className='flex-grow md:mt-0 md:pr-12'>
           {/* Current Password */}
           <div className='mt-4 flex flex-col flex-wrap sm:flex-row'>
-            <div className='truncate pt-3 capitalize sm:w-[20%] sm:text-right'>Mật khẩu hiện tại</div>
+            <div className='truncate pt-3 capitalize sm:w-[20%] sm:text-right'>
+              {t('changePassword.currentPassword')}
+            </div>
             <div className='sm:w-[80%] sm:pl-5'>
               <div className='relative'>
                 <Input
@@ -81,7 +85,7 @@ export default function Password() {
                   type={showPassword.password ? 'text' : 'password'}
                   register={register}
                   name='password'
-                  placeholder='Mật khẩu hiện tại'
+                  placeholder={t('changePassword.currentPassword')}
                 />
                 <Button
                   type='button'
@@ -99,7 +103,7 @@ export default function Password() {
           </div>
           {/* New Password */}
           <div className='mt-4 flex flex-col flex-wrap sm:flex-row'>
-            <div className='truncate pt-3 capitalize sm:w-[20%] sm:text-right'>Mật khẩu mới</div>
+            <div className='truncate pt-3 capitalize sm:w-[20%] sm:text-right'>{t('changePassword.newPassword')}</div>
             <div className='sm:w-[80%] sm:pl-5'>
               <div className='relative'>
                 <Input
@@ -109,7 +113,7 @@ export default function Password() {
                   type={showPassword.new_password ? 'text' : 'password'}
                   register={register}
                   name='new_password'
-                  placeholder='Mật khẩu mới'
+                  placeholder={t('changePassword.newPassword')}
                 />
                 <Button
                   type='button'
@@ -127,7 +131,9 @@ export default function Password() {
           </div>
           {/* Confirm Password */}
           <div className='mt-4 flex flex-col flex-wrap sm:flex-row'>
-            <div className='truncate pt-3 capitalize sm:w-[20%] sm:text-right'>Xác Nhận Mật Khẩu Mới</div>
+            <div className='truncate pt-3 capitalize sm:w-[20%] sm:text-right'>
+              {t('changePassword.confirmPassword')}
+            </div>
             <div className='sm:w-[80%] sm:pl-5'>
               <div className='relative'>
                 <Input
@@ -137,7 +143,7 @@ export default function Password() {
                   type={showPassword.confirm_password ? 'text' : 'password'}
                   register={register}
                   name='confirm_password'
-                  placeholder='Xác nhận mật khẩu mới'
+                  placeholder={t('changePassword.confirmPassword')}
                 />
                 <Button
                   type='button'
@@ -161,7 +167,7 @@ export default function Password() {
                 className='flex h-9 items-center bg-primary px-5 text-center text-sm text-white hover:bg-primary/80'
                 type='submit'
               >
-                Lưu
+                {t('save')}
               </Button>
             </div>
           </div>

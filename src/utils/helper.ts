@@ -1,4 +1,5 @@
 import userImage from 'src/assets/images/user.svg'
+import languages from 'src/constants/language'
 
 export function formatCurrency(currency: number) {
   return new Intl.NumberFormat('de-DE').format(currency)
@@ -43,3 +44,7 @@ export const hideText = (text: string, start: number = 0, end: number = text.len
 
 export const getAvatarUrl = (avatarName?: string) =>
   avatarName ? `${import.meta.env.VITE_API_BASE_URL}images/${avatarName}` : userImage
+
+export const setLanguageToLocalStorage = (language: keyof typeof languages) =>
+  localStorage.setItem('language', language)
+export const getLanguageFromLocalStorage = () => (localStorage.getItem('language') as keyof typeof languages) || 'vi'

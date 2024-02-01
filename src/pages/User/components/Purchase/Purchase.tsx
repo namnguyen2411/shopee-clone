@@ -1,5 +1,7 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { Link, useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
+
 import purchaseStatus from 'src/constants/purchaseStatus'
 import purchaseApi from 'src/apis/purchase.api'
 import routes from 'src/constants/routes'
@@ -7,6 +9,7 @@ import { formatCurrency, generateNameId } from 'src/utils/helper'
 import Button from 'src/components/Button'
 
 export default function Purchase() {
+  const { t } = useTranslation('user')
   const navigate = useNavigate()
   const { data: purchasesResponse } = useQuery({
     queryKey: ['purchases', { status: purchaseStatus.completed }],
@@ -43,7 +46,7 @@ export default function Purchase() {
       <div className='overflow-x-auto'>
         <div className='min-w-[700px]'>
           <div className='border-b border-b-gray-200 py-6'>
-            <h1 className='pb-1 text-xl font-medium capitalize text-gray-900'>Đơn mua hoàn Thành</h1>
+            <h1 className='pb-1 text-xl font-medium capitalize text-gray-900'>{t('myPurchase.completedPurchase')}</h1>
           </div>
           <div>
             {purchasesData.map((purchase) => (
@@ -59,7 +62,9 @@ export default function Purchase() {
                   {/* Product Details */}
                   <div className='ml-3 flex-grow overflow-hidden'>
                     <div className='truncate text-base'>{purchase.product.name}</div>
-                    <div className='mt-2'>Số lượng: {purchase.buy_count}</div>
+                    <div className='mt-2'>
+                      {t('myPurchase.quantity')}: {purchase.buy_count}
+                    </div>
                   </div>
                   <div className='ml-10 flex-shrink-0'>
                     <span className='truncate text-gray-500 line-through'>
@@ -90,7 +95,7 @@ export default function Purchase() {
                           fill='#fff'
                         />
                       </svg>
-                      Thành tiền:
+                      {t('myPurchase.orderTotal')}:
                     </span>
                     <span className='ml-4 text-2xl text-primary'>
                       ₫{formatCurrency(purchase.product.price * purchase.buy_count)}
@@ -100,7 +105,7 @@ export default function Purchase() {
                     onClick={() => handleBuyNow(purchase.product._id)}
                     className='ml-auto mt-5 flex h-9 min-w-[8rem] items-center justify-center rounded-sm bg-primary px-5 text-base capitalize text-white shadow-sm outline-none hover:bg-primary/90'
                   >
-                    Mua Lại
+                    {t('myPurchase.buyAgain')}
                   </Button>
                 </div>
               </div>

@@ -1,7 +1,8 @@
-import { Link, useLocation } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useContext } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import routes from 'src/constants/routes'
 import { LoginSchema, type LoginSchemaType } from 'src/utils/schema'
@@ -14,8 +15,7 @@ import { AppContext } from 'src/context/appContext'
 import Button from 'src/components/Button'
 
 export default function Register() {
-  const location = useLocation()
-  const isLogin = location.pathname.endsWith(routes.login)
+  const { t } = useTranslation('header')
   const { setIsAuthenticated, setProfile } = useContext(AppContext)
 
   const loginMutation = useMutation({
@@ -58,7 +58,7 @@ export default function Register() {
           noValidate
           onSubmit={(e) => void handleSubmit(onSubmit)(e)}
         >
-          <div className='mb-8 text-xl'>{isLogin ? 'Đăng nhập' : 'Đăng ký'}</div>
+          <div className='mb-8 text-xl'>{t('loginPage.login')}</div>
           <div className='mb-4'>
             <Input<LoginSchemaType>
               register={register}
@@ -75,7 +75,7 @@ export default function Register() {
               name='password'
               type='password'
               className='w-full border border-gray-300 p-3 outline-none focus:border-gray-500 focus:shadow-sm'
-              placeholder='Mật khẩu'
+              placeholder={t('registerPage.password')}
               autoComplete='on'
             />
             <span className='text-sx mt-0.5 block min-h-5 text-red-500'>{errors.password?.message}</span>
@@ -89,13 +89,13 @@ export default function Register() {
               {loginMutation.isPending && (
                 <span className='mr-1.5 aspect-square w-4 animate-spin rounded-full border-l-2 border-t-2 border-gray-400' />
               )}
-              Đăng nhập
+              {t('loginPage.login')}
             </Button>
           </div>
           <div className='mt-8 flex items-center justify-center'>
-            <span className='text-gray-400'>Bạn chưa có tài khoản?</span>
+            <span className='text-gray-400'>{t('loginPage.new')}</span>
             <Link className='ml-1 text-red-400' to={routes.register}>
-              Đăng kí
+              {t('registerPage.register')}
             </Link>
           </div>
         </form>

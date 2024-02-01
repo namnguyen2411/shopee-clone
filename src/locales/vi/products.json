@@ -1,0 +1,33 @@
+{
+  "searchResult": "Kết quả tìm kiếm cho từ khoá",
+  "sold": "Đã bán",
+  "asideFilter": {
+    "category": "Danh Mục",
+    "categories": {
+      "all": "Tất cả",
+      "tShirt": "Áo thun",
+      "watches": "Đồng hồ",
+      "mobile": "Điện thoại"
+    },
+    "searchFilter": "Bộ Lọc Tìm Kiếm",
+    "searchFilterOptions": {
+      "priceRange": "Khoảng giá",
+      "min": "₫ TỪ",
+      "max": "₫ ĐẾN",
+      "apply": "ÁP DỤNG",
+      "rating": "Đánh giá",
+      "up": "trở lên",
+      "clearAll": "XOÁ TẤT CẢ"
+    }
+  },
+  "sortButtons": {
+    "sortBy": "Sắp Xếp Theo",
+    "relevance": "Liên Quan",
+    "popular": "Phổ Biến",
+    "latest": "Mới Nhất",
+    "topSales": "Bán Chạy",
+    "price": "Giá",
+    "ascPrice": "Giá: Thấp đến Cao",
+    "descPrice": "Giá: Cao đến Thấp"
+  }
+}

@@ -1,6 +1,7 @@
 import { useContext, useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { Link, useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 
 import { AppContext } from 'src/context/appContext'
 import Popover from '../Popover'
@@ -22,6 +23,7 @@ export default function Header() {
   const { name } = useQueryProductsOptions()
   const navigate = useNavigate()
   const { register, onSubmit, reset } = useSearchProducts()
+  const { t } = useTranslation('header')
 
   const { data: purchasesResponse } = useQuery({
     queryKey: ['purchases'],
@@ -49,7 +51,6 @@ export default function Header() {
   return (
     <div className='bg-[linear-gradient(-180deg,#f53d2d,#f63)] pb-5 pt-1 text-white'>
       <div className='container'>
-        {/* NavHeader */}
         <NavHeader />
         <div className='mt-4 grid grid-cols-12 items-end gap-4'>
           {/* Logo */}
@@ -65,7 +66,7 @@ export default function Header() {
                 defaultValue={name}
                 register={register}
                 className='flex-grow border-none bg-transparent px-3 py-2 text-black outline-none'
-                placeholder='Vui lòng tìm tên sản phẩm có dấu'
+                placeholder={t('searchPlaceholder')}
               />
               <Button className='flex-shrink-0 rounded-sm bg-primary px-6 py-2 hover:opacity-90' type='submit'>
                 <svg
@@ -90,9 +91,9 @@ export default function Header() {
             <Popover
               renderPopover={
                 <>
-                  {purchasesData && purchasesData.length > 0 && (
+                  {isAuthenticated && purchasesData && purchasesData.length > 0 && (
                     <div className='relative max-w-[400px] rounded-sm border border-gray-200 bg-white text-sm shadow-md'>
-                      <div className='p-3 capitalize text-gray-400'>Sản phẩm mới thêm</div>
+                      <div className='p-3 capitalize text-gray-400'>{t('cart.recentlyAdded')}</div>
                       {purchasesData.slice(0, NUMBER_OF_DISPLAY_PURCHASES).map(({ _id, price, product }) => {
                         return (
                           <Button
@@ -126,15 +127,15 @@ export default function Header() {
                           to={routes.cart}
                           className='rounded-sm bg-primary px-4 py-2 capitalize text-white hover:bg-opacity-90'
                         >
-                          Xem giỏ hàng
+                          {t('cart.viewCart')}
                         </Link>
                       </div>
                     </div>
                   )}
                   {(!isAuthenticated || (purchasesData && purchasesData.length <= 0)) && (
-                    <div className='flex h-[240px] w-[400px] items-center justify-center bg-white'>
+                    <div className='flex h-[240px] w-[400px] flex-col items-center justify-center bg-white'>
                       <img src={noProduct} alt='no-product' className='aspect-square w-[100px]' />
-                      <p className='text-black'>Chưa có sản phẩm</p>
+                      <p className='mt-2 text-black'>{t('cart.noProducts')}</p>
                     </div>
                   )}
                 </>
@@ -155,7 +156,7 @@ export default function Header() {
                     d='M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z'
                   />
                 </svg>
-                {purchasesData && purchasesData.length > 0 && (
+                {isAuthenticated && purchasesData && purchasesData.length > 0 && (
                   <span className='absolute -right-2 -top-2 grid h-5 w-6 place-items-center rounded-3xl bg-white text-sm text-red-500'>
                     {purchasesData.length}
                   </span>

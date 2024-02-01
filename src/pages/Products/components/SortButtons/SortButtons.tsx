@@ -1,6 +1,7 @@
 import { Link, createSearchParams, useNavigate } from 'react-router-dom'
 import clsx from 'clsx'
 import omit from 'lodash/omit'
+import { useTranslation } from 'react-i18next'
 
 import ChevronLeftSVG from 'src/components/ChevronLeftSVG'
 import ChevronRightSVG from 'src/components/ChevronRightSVG'
@@ -18,6 +19,7 @@ export default function SortButtons({ queryProductsOptions, pageSize }: SortButt
   const { sort_by = sortBy.createdAt, order = '', name } = queryProductsOptions
   const page = Number(queryProductsOptions.page)
   const navigate = useNavigate()
+  const { t } = useTranslation('products')
 
   const handleChangeSortValue = (value: Exclude<keyof typeof sortBy, 'price'>) => {
     navigate({
@@ -51,7 +53,7 @@ export default function SortButtons({ queryProductsOptions, pageSize }: SortButt
       <div className='flex items-center justify-between px-5 py-3 text-sm'>
         <div>
           <ul className='flex items-center gap-4'>
-            <span>Sắp xếp theo</span>
+            <span>{t('sortButtons.sortBy')}</span>
             {name && (
               <li>
                 <Button
@@ -61,7 +63,7 @@ export default function SortButtons({ queryProductsOptions, pageSize }: SortButt
                   })}
                   onClick={() => handleChangeSortValue(sortBy.relevance)}
                 >
-                  Liên Quan
+                  {t('sortButtons.relevance')}
                 </Button>
               </li>
             )}
@@ -74,7 +76,7 @@ export default function SortButtons({ queryProductsOptions, pageSize }: SortButt
                 })}
                 onClick={() => handleChangeSortValue(sortBy.view)}
               >
-                Phổ biến
+                {t('sortButtons.popular')}
               </Button>
             </li>
             {/* END SORT BY VIEW BUTTON */}
@@ -88,7 +90,7 @@ export default function SortButtons({ queryProductsOptions, pageSize }: SortButt
                 })}
                 onClick={() => handleChangeSortValue(sortBy.createdAt)}
               >
-                Mới Nhất
+                {t('sortButtons.latest')}
               </Button>
             </li>
             {/* END SORT BY CREATED DAY BUTTON */}
@@ -102,7 +104,7 @@ export default function SortButtons({ queryProductsOptions, pageSize }: SortButt
                 })}
                 onClick={() => handleChangeSortValue(sortBy.sold)}
               >
-                Bán Chạy
+                {t('sortButtons.topSales')}
               </Button>
             </li>
             {/* END SORT BY SOLD BUTTON */}
@@ -124,10 +126,10 @@ export default function SortButtons({ queryProductsOptions, pageSize }: SortButt
                   value={order}
                 >
                   <option value='' hidden>
-                    Giá
+                    {t('sortButtons.price')}
                   </option>
-                  <option value={orderBy.asc}>Giá: Thấp đến Cao</option>
-                  <option value={orderBy.desc}>Giá: Cao đến Thấp</option>
+                  <option value={orderBy.asc}>{t('sortButtons.ascPrice')}</option>
+                  <option value={orderBy.desc}>{t('sortButtons.descPrice')}</option>
                 </select>
                 <svg
                   xmlns='http://www.w3.org/2000/svg'

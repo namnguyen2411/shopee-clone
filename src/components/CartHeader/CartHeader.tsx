@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import NavHeader from '../NavHeader'
 import LogoSVG from '../LogoSVG'
 import routes from 'src/constants/routes'
@@ -6,6 +7,7 @@ import useSearchProducts from 'src/hooks/useSearchProducts'
 
 export default function CartHeader() {
   const { register, onSubmit } = useSearchProducts()
+  const { t } = useTranslation('cart')
 
   return (
     <div className='bg-primary text-white shadow-md'>
@@ -21,7 +23,7 @@ export default function CartHeader() {
                 <LogoSVG className='h-10 fill-primary' />
               </div>
               <div className='mx-4 h-6 w-[1px] bg-primary md:h-8' />
-              <div className='capitalize text-primary md:text-xl'>Giỏ hàng</div>
+              <div className='capitalize text-primary md:text-xl'>{t('title')}</div>
             </Link>
             {/* Search */}
             <form className='mt-3 md:mt-0 md:w-[50%]' onSubmit={(e) => void onSubmit(e)}>

@@ -1,0 +1,33 @@
+{
+  "searchResult": "Search result for",
+  "sold": "sold",
+  "asideFilter": {
+    "category": "Category",
+    "categories": {
+      "all": "All",
+      "tShirt": "T-Shirt",
+      "watches": "Watches",
+      "mobile": "Mobile"
+    },
+    "searchFilter": "Search Filter",
+    "searchFilterOptions": {
+      "priceRange": "Price Range",
+      "min": "₫ MIN",
+      "max": "₫ MAX",
+      "apply": "APPLY",
+      "rating": "Rating",
+      "up": "& Up",
+      "clearAll": "Clear All"
+    }
+  },
+  "sortButtons": {
+    "sortBy": "Sort By",
+    "relevance": "Relevance",
+    "popular": "Popular",
+    "latest": "Latest",
+    "topSales": "Top Sales",
+    "price": "Price",
+    "ascPrice": "Price: Low to High",
+    "descPrice": "Price: High to Low"
+  }
+}

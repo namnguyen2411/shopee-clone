@@ -4,6 +4,7 @@ import { useMutation, useQuery } from '@tanstack/react-query'
 import { Controller, useForm } from 'react-hook-form'
 import clsx from 'clsx'
 import { toast } from 'react-toastify'
+import { useTranslation } from 'react-i18next'
 
 import userApi from 'src/apis/user.api'
 import Button from 'src/components/Button'
@@ -19,9 +20,17 @@ import { ErrorResponse } from 'src/types/response.type'
 
 const START_HIDE_TEXT_INDEX = 2
 const END_HIDE_TEXT_INDEX = 9
-const avatarSizeLimit = 300 * 1024 // 300Kb
+const avatarSizeLimit = 300 // 300Kb
+const avatarExtension = '.jpg,.jpeg,.png'
 
 export default function Profile() {
+  const { t } = useTranslation('user')
+  const datePickerTranslation = {
+    dateOfBirth: t('profile.dateOfBirth'),
+    year: t('profile.year'),
+    month: t('profile.month'),
+    date: t('profile.date')
+  }
   const [file, setFile] = useState<File>()
   const { setProfile } = useContext(AppContext)
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -120,7 +129,7 @@ export default function Profile() {
 
   const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
-    if (file && (file.size > avatarSizeLimit || !file.type.includes('image'))) {
+    if (file && (file.size > avatarSizeLimit * 1024 || !file.type.includes('image'))) {
       toast.error('Ảnh không đúng định dạng hoặc vượt quá kích thước', {
         position: 'top-center',
         autoClose: 3000
@@ -138,8 +147,8 @@ export default function Profile() {
   return (
     <div className='rounded-sm bg-white px-2 pb-10 shadow md:px-7 md:pb-20'>
       <div className='border-b border-b-gray-200 py-6'>
-        <h1 className='text-lg font-medium capitalize text-gray-900'>Hồ Sơ Của Tôi</h1>
-        <div className='mt-1 text-sm text-gray-600'>Quản lý thông tin hồ sơ để bảo mật tài khoản</div>
+        <h1 className='text-lg font-medium capitalize text-gray-900'>{t('profile.myProfile')}</h1>
+        <div className='mt-1 text-sm text-gray-600'>{t('profile.manage&protect')}</div>
       </div>
       {/* User Profile */}
       <form
@@ -159,7 +168,7 @@ export default function Profile() {
           </div>
           {/* Name */}
           <div className='mt-[38px] flex flex-col flex-wrap sm:flex-row'>
-            <div className='truncate pt-3 capitalize sm:w-[20%] sm:text-right'>Tên</div>
+            <div className='truncate pt-3 capitalize sm:w-[20%] sm:text-right'>{t('profile.name')}</div>
             <div className='sm:w-[80%] sm:pl-5'>
               <Input
                 className={clsx('w-full rounded-sm border border-gray-300 px-3 py-2 outline-none focus:shadow-sm', {
@@ -168,14 +177,14 @@ export default function Profile() {
                 type='text'
                 register={register}
                 name='name'
-                placeholder='Tên'
+                placeholder={t('profile.name')}
               />
               <span className='text-sx mt-0.5 block min-h-5 text-red-500'>{errors.name?.message}</span>
             </div>
           </div>
           {/* Phone Number */}
           <div className='mt-4 flex flex-col flex-wrap sm:flex-row'>
-            <div className='truncate pt-3 capitalize sm:w-[20%] sm:text-right'>Số điện thoại</div>
+            <div className='truncate pt-3 capitalize sm:w-[20%] sm:text-right'>{t('profile.phoneNumber')}</div>
             <div className='sm:w-[80%] sm:pl-5'>
               <Controller
                 control={control}
@@ -184,7 +193,7 @@ export default function Profile() {
                   <NumberInput
                     value={field.value}
                     onChange={field.onChange}
-                    placeholder='Số điện thoại'
+                    placeholder={t('profile.phoneNumber')}
                     className={clsx('w-full rounded-sm border border-gray-300 px-3 py-2 outline-none focus:shadow-sm', {
                       'border-red-500 bg-primary/5': errors.phone
                     })}
@@ -197,7 +206,7 @@ export default function Profile() {
           </div>
           {/* Address */}
           <div className='mt-4 flex flex-col flex-wrap sm:flex-row'>
-            <div className='truncate pt-3 capitalize sm:w-[20%] sm:text-right'>Địa chỉ</div>
+            <div className='truncate pt-3 capitalize sm:w-[20%] sm:text-right'>{t('profile.address')}</div>
             <div className='sm:w-[80%] sm:pl-5'>
               <Input
                 className={clsx('w-full rounded-sm border border-gray-300 px-3 py-2 outline-none focus:shadow-sm', {
@@ -206,7 +215,7 @@ export default function Profile() {
                 type='text'
                 register={register}
                 name='address'
-                placeholder='Địa chỉ'
+                placeholder={t('profile.address')}
               />
               <span className='text-sx mt-0.5 block min-h-5 text-red-500'>{errors.address?.message}</span>
             </div>
@@ -216,7 +225,12 @@ export default function Profile() {
             control={control}
             name='date_of_birth'
             render={({ field }) => (
-              <DatePicker onChange={field.onChange} value={field.value} errorMessage={errors.date_of_birth?.message} />
+              <DatePicker
+                onChange={field.onChange}
+                value={field.value}
+                errorMessage={errors.date_of_birth?.message}
+                datePickerTranslation={datePickerTranslation}
+              />
             )}
           />
           <div className='mt-4 flex flex-col flex-wrap sm:flex-row'>
@@ -226,7 +240,7 @@ export default function Profile() {
                 className='flex h-9 items-center bg-primary px-5 text-center text-sm text-white hover:bg-primary/80'
                 type='submit'
               >
-                Lưu
+                {t('save')}
               </Button>
             </div>
           </div>
@@ -244,7 +258,7 @@ export default function Profile() {
             <input
               className='hidden'
               type='file'
-              accept='.jpg,.jpeg,.png'
+              accept={avatarExtension}
               ref={fileInputRef}
               onChange={onFileChange}
               onClick={(e) => ((e.target as HTMLInputElement).value = '')}
@@ -254,11 +268,13 @@ export default function Profile() {
               type='button'
               onClick={handleUpload}
             >
-              Chọn ảnh
+              {t('profile.selectImage')}
             </Button>
-            <div className='mt-4 text-red-300'>
-              <div>Dụng lượng file tối đa 300 KB</div>
-              <div>Định dạng:.JPEG, .PNG</div>
+            <div className='mt-4 text-red-400'>
+              <div>
+                {t('profile.fileSize')} {avatarSizeLimit}KB
+              </div>
+              <div>{t('profile.fileExtension')}: .JPEG, .PNG</div>
             </div>
           </div>
         </div>

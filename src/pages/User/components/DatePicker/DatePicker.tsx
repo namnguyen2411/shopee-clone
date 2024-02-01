@@ -5,9 +5,15 @@ type DatePickerProps = {
   value?: Date
   onChange?: (value: Date) => void
   errorMessage?: string
+  datePickerTranslation?: {
+    dateOfBirth: string
+    year: string
+    month: string
+    date: string
+  }
 }
 
-export default function DatePicker({ value, onChange, errorMessage }: DatePickerProps) {
+export default function DatePicker({ value, onChange, errorMessage, datePickerTranslation }: DatePickerProps) {
   const [date, setDate] = useState({
     date: value?.getDate() || 1,
     month: value?.getMonth() || 0,
@@ -36,7 +42,7 @@ export default function DatePicker({ value, onChange, errorMessage }: DatePicker
 
   return (
     <div className='mt-4 flex flex-col flex-wrap sm:flex-row'>
-      <div className='truncate pt-3 capitalize sm:w-[20%] sm:text-right'>Ngày sinh</div>
+      <div className='truncate pt-3 capitalize sm:w-[20%] sm:text-right'>{datePickerTranslation?.dateOfBirth}</div>
       <div className='sm:w-[80%] sm:pl-5'>
         <div className='flex justify-between'>
           <select
@@ -45,7 +51,7 @@ export default function DatePicker({ value, onChange, errorMessage }: DatePicker
             onChange={(e) => handleChange(e)}
             className='h-10 w-[32%] cursor-pointer rounded-sm border border-black/10 px-3 outline-none hover:border-primary'
           >
-            <option disabled>Ngày</option>
+            <option disabled>{datePickerTranslation?.date}</option>
             {range(1, 32).map((day) => (
               <option key={day}>{day}</option>
             ))}
@@ -56,7 +62,7 @@ export default function DatePicker({ value, onChange, errorMessage }: DatePicker
             onChange={(e) => handleChange(e)}
             className='h-10 w-[32%] cursor-pointer rounded-sm border border-black/10 px-3 outline-none hover:border-primary'
           >
-            <option disabled>Tháng</option>
+            <option disabled>{datePickerTranslation?.month}</option>
             {range(0, 12).map((month) => (
               <option value={month} key={month}>
                 {month + 1}
@@ -69,7 +75,7 @@ export default function DatePicker({ value, onChange, errorMessage }: DatePicker
             onChange={(e) => handleChange(e)}
             className='h-10 w-[32%] cursor-pointer rounded-sm border border-black/10 px-3 hover:border-primary'
           >
-            <option disabled>Năm</option>
+            <option disabled>{datePickerTranslation?.year}</option>
             {range(1980, new Date().getFullYear() + 1).map((year) => (
               <option value={year} key={year}>
                 {year}
