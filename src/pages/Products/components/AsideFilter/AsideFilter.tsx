@@ -23,11 +23,12 @@ type AsideFilterProps = {
 
 const STARS_RATING_OPTIONS = [5, 4, 3, 2, 1]
 const MAX_NUMBER_OF_STAR = STARS_RATING_OPTIONS[0]
+const categories_en = ['T-shirt', 'Watch', 'Phone']
 
 const categoryChangedEvent = new Event('category_changed')
 
 export default function AsideFilter({ categories, queryProductsOptions }: AsideFilterProps) {
-  const { t } = useTranslation('products')
+  const { i18n, t } = useTranslation('products')
   const navigate = useNavigate()
   const { category = '', rating_filter } = queryProductsOptions
 
@@ -113,7 +114,7 @@ export default function AsideFilter({ categories, queryProductsOptions }: AsideF
               {category === '' && <TriangleRightSVG className='absolute -left-3 top-1/4 h-2 w-2 fill-primary' />}
             </Link>
           </li>
-          {categories.map(({ _id, name }) => {
+          {categories.map(({ _id, name }, index) => {
             return (
               <li className='py-1.5 pl-3' key={_id}>
                 <Link
@@ -129,7 +130,7 @@ export default function AsideFilter({ categories, queryProductsOptions }: AsideF
                     'font-medium text-black': category !== _id
                   })}
                 >
-                  {name}
+                  {i18n.language === 'vi' ? name : categories_en[index]}
                   {category === _id && <TriangleRightSVG className='absolute -left-3 top-1/4 h-2 w-2 fill-primary' />}
                 </Link>
               </li>

@@ -12,5 +12,6 @@
   "saved": "Saved",
   "checkOut": "Check Out",
   "empty": "Your shopping cart is empty",
-  "shoppingNow": "Shopping Now"
+  "shoppingNow": "Shopping Now",
+  "checkOutToast": "Check Out Success"
 }

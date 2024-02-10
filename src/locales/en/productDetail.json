@@ -4,6 +4,7 @@
   "quantity": "Quantity",
   "inStock": "pieces available",
   "addToCart": "Add To Cart",
+  "addToCartToast": "Item has been added to your shopping cart",
   "buyNow": "Buy now",
   "description": "PRODUCT DESCRIPTION",
   "alsoLike": "YOU MAY ALSO LIKE"

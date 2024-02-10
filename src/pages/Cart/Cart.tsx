@@ -23,7 +23,7 @@ export default function Cart() {
   const location = useLocation()
   const buyNowPurchaseId = (location.state as { purchaseId: string | null })?.purchaseId
 
-  const timerRef = useRef(-1)
+  const timerRef = useRef<NodeJS.Timeout>()
   const myDebounce = (cb: (purchaseIndex: number, buy_count: number) => void, delayTime: number) => {
     return function (purchaseIndex: number, buy_count: number) {
       clearTimeout(timerRef.current)
@@ -55,9 +55,9 @@ export default function Cart() {
 
   const buyMutation = useMutation({
     mutationFn: purchaseApi.buyPurchase,
-    onSuccess: (data) => {
+    onSuccess: () => {
       void refetch()
-      toast.success(data.data.message, {
+      toast.success(t('checkOutToast'), {
         position: 'top-center',
         autoClose: false
       })
@@ -317,7 +317,13 @@ export default function Cart() {
                           </div>
                         </div>
                         <div className='col-span-1'>
-                          <Button className='disabled:opacity-50' disabled={purchase.isDisabled}>
+                          <div
+                            className='disabled:opacity-50'
+                            style={{
+                              pointerEvents: purchase.isDisabled ? 'none' : 'auto',
+                              opacity: purchase.isDisabled ? 0.4 : 1
+                            }}
+                          >
                             <QuantityController
                               value={purchase.buy_count}
                               onDecrease={(value) =>
@@ -331,7 +337,7 @@ export default function Cart() {
                               }
                               onBlur={(value) => handleBlur(index, value)}
                             />
-                          </Button>
+                          </div>
                         </div>
                         <div className='col-span-1 ml-4'>
                           <span className='text-primary'>

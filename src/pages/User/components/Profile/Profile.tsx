@@ -69,7 +69,7 @@ export default function Profile() {
       void refetch()
       setProfile(data.data.data)
       setProfileToLocalStorage(data.data.data)
-      toast.success(data.data.message, {
+      toast.success(t('profile.toast'), {
         position: 'top-center',
         autoClose: 3000
       })
@@ -113,7 +113,7 @@ export default function Profile() {
           })
         },
         onError: () => {
-          toast.error('Không thể cập nhật ảnh đại diện', {
+          toast.error(t('profile.uploadAvatarError'), {
             position: 'top-center',
             autoClose: 3000
           })
@@ -131,7 +131,7 @@ export default function Profile() {
   const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file && (file.size > avatarSizeLimit * 1024 || !file.type.includes('image'))) {
-      toast.error('Ảnh không đúng định dạng hoặc vượt quá kích thước', {
+      toast.error(t('profile.avatarError'), {
         position: 'top-center',
         autoClose: 3000
       })

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useContext } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useNavigate, useParams } from 'react-router-dom'
 import DOMPurify from 'dompurify'
@@ -19,12 +19,13 @@ import purchasesApi from 'src/apis/purchase.api'
 import Button from 'src/components/Button'
 import routes from 'src/constants/routes'
 import NotFound from '../NotFound'
+import { AppContext } from 'src/context/appContext'
 
 const NUMBER_OF_SLIDES = 5
 
 export default function ProductDetail() {
-  // get product id from custom url
-  const id = getIdFromNameId(useParams().id as string)
+  const nameId = useParams().id as string
+  const id = getIdFromNameId(nameId)
   const [activeSlideIndex, setActiveSlideIndex] = useState({
     first: 0,
     last: NUMBER_OF_SLIDES
@@ -34,6 +35,7 @@ export default function ProductDetail() {
   const queryClient = useQueryClient()
   const navigate = useNavigate()
   const { t } = useTranslation('productDetail')
+  const { isAuthenticated } = useContext(AppContext)
 
   const productDetailRespone = useQuery({
     queryKey: ['product', id],
@@ -97,14 +99,24 @@ export default function ProductDetail() {
   }
 
   const handleAddToCart = () => {
+    if (!isAuthenticated) {
+      navigate(routes.login, {
+        state: {
+          from: 'productDetail',
+          productId: product?._id,
+          productName: product?.name
+        }
+      })
+    }
+
     addToCartMutation.mutate(
       {
         product_id: product?._id as string,
         buy_count: quantity
       },
       {
-        onSuccess: (data) => {
-          toast.success(data.data.message, {
+        onSuccess: () => {
+          toast.success(t('addToCartToast'), {
             position: 'top-center',
             autoClose: 3000
           })
@@ -118,6 +130,16 @@ export default function ProductDetail() {
   }
 
   const handleBuyNow = () => {
+    if (!isAuthenticated) {
+      navigate(routes.login, {
+        state: {
+          from: 'productDetail',
+          productId: product?._id,
+          productName: product?.name
+        }
+      })
+    }
+
     addToCartMutation.mutate(
       {
         product_id: product?._id as string,

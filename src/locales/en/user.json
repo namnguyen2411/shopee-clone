@@ -18,13 +18,17 @@
     "year": "Year",
     "selectImage": "Select Image",
     "fileSize": "File size: maximum",
-    "fileExtension": "File extension"
+    "fileExtension": "File extension",
+    "toast": "Profile updated successfully",
+    "avatarError": "Image is not in the correct format or exceeds the size limit",
+    "uploadAvatarError": "Failed to upload avatar"
   },
   "changePassword": {
     "changePassword": "Change Password",
     "currentPassword": "Current Password",
     "newPassword": "New Password",
-    "confirmPassword": "Confirm Password"
+    "confirmPassword": "Confirm Password",
+    "toast": "Password changed successfully"
   },
   "myPurchase": {
     "completedPurchase": "Completed Purchase",

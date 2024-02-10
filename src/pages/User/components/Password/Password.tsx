@@ -46,8 +46,8 @@ export default function Password() {
 
   const onSubmit = handleSubmit((data: PasswordSchemaType) => {
     changePasswordMutation.mutate(omit(data, ['confirm_password']), {
-      onSuccess: (data) => {
-        toast.success(data.data.message, {
+      onSuccess: () => {
+        toast.success(t('changePassword.toast'), {
           position: 'top-center',
           autoClose: 3000
         })

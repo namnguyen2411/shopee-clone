@@ -18,13 +18,17 @@
     "year": "Năm",
     "selectImage": "Chọn Ảnh",
     "fileSize": "Dung lượng file tối đa",
-    "fileExtension": "Định dạng"
+    "fileExtension": "Định dạng",
+    "toast": "Cập nhật thông tin thành công",
+    "avatarError": "Ảnh không đúng định dạng hoặc vượt quá kích thước",
+    "uploadAvatarError": "Không thể cập nhật ảnh đại diện"
   },
   "changePassword": {
     "changePassword": "Đổi Mật Khẩu",
     "currentPassword": "Mật Khẩu Hiện Tại",
     "newPassword": "Mật Khẩu Mới",
-    "confirmPassword": "Xác Nhận Mật Khẩu"
+    "confirmPassword": "Xác Nhận Mật Khẩu",
+    "toast": "Đổi mật khẩu thành công"
   },
   "myPurchase": {
     "completedPurchase": "Đơn Mua Hoàn Thành",

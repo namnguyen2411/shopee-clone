@@ -35,8 +35,8 @@ export default function QuantityController({
 
       <NumberInput
         value={value}
-        onChange={(inputValue) => onChange(inputValue as number)}
-        onBlur={() => onBlur && onBlur(value)}
+        onChange={(inputValue) => onChange(Number(inputValue))}
+        onBlur={() => onBlur && onBlur(Number(value))}
         className='h-8 w-14 border-b border-t border-gray-300 p-1 text-center outline-none focus:border-2 focus:border-black'
       />
 

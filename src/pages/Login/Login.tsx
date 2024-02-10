@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useContext } from 'react'
@@ -14,8 +14,13 @@ import isGenericsAxiosError from 'src/utils/isGenericsAxiosError'
 import { ErrorResponse } from 'src/types/response.type'
 import { AppContext } from 'src/context/appContext'
 import Button from 'src/components/Button'
+import { generateNameId } from 'src/utils/helper'
 
 export default function Register() {
+  const location = useLocation()
+  const { from, productId, productName } =
+    (location.state as { from: string; productId: string; productName: string }) || {}
+  const navigate = useNavigate()
   const { t } = useTranslation('header')
   const { setIsAuthenticated, setProfile } = useContext(AppContext)
 
@@ -35,6 +40,10 @@ export default function Register() {
   const onSubmit: SubmitHandler<LoginSchemaType> = (data: LoginSchemaType) => {
     loginMutation.mutate(data, {
       onSuccess: (data) => {
+        if (from === 'productDetail') {
+          navigate(`${routes.products}/${generateNameId({ name: productName, id: productId })}`)
+        }
+
         setIsAuthenticated(true)
         setProfile(data.data.data.user)
         reset()
