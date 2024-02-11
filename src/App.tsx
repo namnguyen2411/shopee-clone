@@ -13,6 +13,7 @@ import RegisterLayout from './layouts/RegisterLayout'
 import MainLayout from './layouts/MainLayout'
 import CartLayout from './layouts/CartLayout'
 import UserLayout from './layouts/UserLayout'
+import ScrollToTop from './components/ScrollToTop'
 // pages
 const Login = lazy(() => import('./pages/Login'))
 const Register = lazy(() => import('./pages/Register'))
@@ -30,113 +31,113 @@ export default function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(
       <Route errorElement={<ErrorBoundary />}>
-        <Route element={<RegisterLayout />}>
-          <Route
-            path={routes.register}
-            element={
-              isAuthenticated ? (
-                <Navigate to={routes.home} />
-              ) : (
+        <Route element={<ScrollToTop />}>
+          <Route element={<RegisterLayout />}>
+            <Route
+              path={routes.register}
+              element={
+                isAuthenticated ? (
+                  <Navigate to={routes.home} />
+                ) : (
+                  <Suspense fallback={<Loading />}>
+                    <Register />
+                  </Suspense>
+                )
+              }
+            />
+            <Route
+              path={routes.login}
+              element={
+                isAuthenticated ? (
+                  <Navigate to={routes.home} />
+                ) : (
+                  <Suspense fallback={<Loading />}>
+                    <Login />
+                  </Suspense>
+                )
+              }
+            />
+          </Route>
+          <Route element={<MainLayout />}>
+            <Route
+              path={routes.home}
+              element={
                 <Suspense fallback={<Loading />}>
-                  <Register />
+                  <Products />
                 </Suspense>
-              )
-            }
-          />
-
-          <Route
-            path={routes.login}
-            element={
-              isAuthenticated ? (
-                <Navigate to={routes.home} />
-              ) : (
+              }
+            />
+            <Route
+              path={routes.product}
+              element={
                 <Suspense fallback={<Loading />}>
-                  <Login />
+                  <ProductDetail />
                 </Suspense>
-              )
-            }
-          />
-        </Route>
-        <Route element={<MainLayout />}>
-          <Route
-            path={routes.home}
-            element={
-              <Suspense fallback={<Loading />}>
-                <Products />
-              </Suspense>
-            }
-          />
-
-          <Route
-            path={routes.product}
-            element={
-              <Suspense fallback={<Loading />}>
-                <ProductDetail />
-              </Suspense>
-            }
-          />
-        </Route>
-        <Route element={<UserLayout />}>
-          <Route
-            path={routes.purchase}
-            element={
-              isAuthenticated ? (
+              }
+            />
+          </Route>
+          <Route element={<UserLayout />}>
+            <Route
+              path={routes.purchase}
+              element={
+                isAuthenticated ? (
+                  <Suspense fallback={<Loading />}>
+                    <Purchases />
+                  </Suspense>
+                ) : (
+                  <Navigate to={routes.login} />
+                )
+              }
+            />
+            <Route
+              path={routes.profile}
+              element={
+                isAuthenticated ? (
+                  <Suspense fallback={<Loading />}>
+                    <Profile />
+                  </Suspense>
+                ) : (
+                  <Navigate to={routes.login} />
+                )
+              }
+            />
+            <Route
+              path={routes.changePassword}
+              element={
+                isAuthenticated ? (
+                  <Suspense fallback={<Loading />}>
+                    <Password />
+                  </Suspense>
+                ) : (
+                  <Navigate to={routes.login} />
+                )
+              }
+            />
+          </Route>
+          <Route element={<CartLayout />}>
+            <Route
+              path={routes.cart}
+              element={
+                isAuthenticated ? (
+                  <Suspense fallback={<Loading />}>
+                    <Cart />
+                  </Suspense>
+                ) : (
+                  <Navigate to={routes.login} />
+                )
+              }
+            />
+          </Route>
+          <Route element={<MainLayout />}>
+            <Route
+              path='*'
+              element={
                 <Suspense fallback={<Loading />}>
-                  <Purchases />
+                  <NotFound />
                 </Suspense>
-              ) : (
-                <Navigate to={routes.login} />
-              )
-            }
-          />
-          <Route
-            path={routes.profile}
-            element={
-              isAuthenticated ? (
-                <Suspense fallback={<Loading />}>
-                  <Profile />
-                </Suspense>
-              ) : (
-                <Navigate to={routes.login} />
-              )
-            }
-          />
-          <Route
-            path={routes.changePassword}
-            element={
-              isAuthenticated ? (
-                <Suspense fallback={<Loading />}>
-                  <Password />
-                </Suspense>
-              ) : (
-                <Navigate to={routes.login} />
-              )
-            }
-          />
-        </Route>
-        <Route element={<CartLayout />}>
-          <Route
-            path={routes.cart}
-            element={
-              isAuthenticated ? (
-                <Suspense fallback={<Loading />}>
-                  <Cart />
-                </Suspense>
-              ) : (
-                <Navigate to={routes.login} />
-              )
-            }
-          />
-        </Route>
-        <Route element={<MainLayout />}>
-          <Route
-            path='*'
-            element={
-              <Suspense fallback={<Loading />}>
-                <NotFound />
-              </Suspense>
-            }
-          />
+              }
+            />
+          </Route>
         </Route>
       </Route>
     )
